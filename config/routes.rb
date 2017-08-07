@@ -4,4 +4,6 @@ Rails.application.routes.draw do
   post '/ask' => 'chat#filter'
 
   post '/chat' => 'phrases#autocomplete'
+  post '/check-validity' => 'phrases#check_validity'
+
 end

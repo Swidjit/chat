@@ -46,14 +46,8 @@
 
 :javascript
   var client;
-  var languageoptions = document.getElementById("languageoptions");
   var speechActivity = document.getElementById("speechActivity");
   var networkActivity = document.getElementById("networkActivity");
-
-  languageoptions.addEventListener("change", function () {
-      createAndSetupClient();
-  });
-
 
   function setText(text) {
       document.getElementById("output").value += text + "\n";
@@ -153,6 +147,20 @@
       $('#comment').html('<div class="chunk">'+ phrase +'</chunk>');
       $('#chat').val('');
       $('#chat').focus();
-
+      $('#chat').css('color','green');
       $('#search-result').empty();
     });
+
+  $(window).keyup(function (e) {
+    console.log(e.keyCode);
+    if (e.keyCode === 0 || e.keyCode === 32 || e.keyCode === 8) {
+      $.post('/check-validity', {q:phrase+' '+$('#chat').val()}, function(data) {
+        if(data["success"] == true) {
+          $('#chat').css('color','green');
+        }
+        else {
+          $('#chat').css('color','red');
+        }
+      });
+    }
+  });

@@ -7,4 +7,11 @@ class PhrasesController < ApplicationController
     end
   end
 
+  def check_validity
+    is_valid = Phrase.check_if_valid(params[:q])
+    respond_to do |format|
+      format.json { render :json => {:success => is_valid} }
+    end
+  end
+
 end
