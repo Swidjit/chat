@@ -25,6 +25,15 @@
     padding: 4px 6px;
     display: inline;
   }
+
+  #chatbox {
+    text-align: right;
+  }
+  #comment, #chat {
+    display:inline;
+    font-size: 1.2em;
+    text-align: left;
+  }
 %img#speechActivity.hidden{:src => "waiting.gif"}/
 %img#networkActivity.hidden{:src => "radio.gif"}/
 %table{:width => "100%"}
@@ -39,10 +48,12 @@
     %td
       %textarea#output{:style => "width:400px;height:200px"}
 %ul#wavFiles
-#comment
-%hr
-%input#chat{:type=>'text', :placeholder => 'Search by Dealmaker Name', :style => "width:300px"}
-#search-result
+#chatbox
+  #comment
+  %input#chat{:type=>'text', :placeholder => 'talk', :style => "width:300px"}
+    #search-result
+
+
 
 :javascript
   var client;
@@ -152,7 +163,6 @@
     });
 
   $(window).keyup(function (e) {
-    console.log(e.keyCode);
     if (e.keyCode === 0 || e.keyCode === 32 || e.keyCode === 8) {
       $.post('/check-validity', {q:phrase+' '+$('#chat').val()}, function(data) {
         if(data["success"] == true) {
