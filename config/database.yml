@@ -1,0 +1,9 @@
+development:
+  adapter: postgresql
+  encoding: unicode
+  database: chatter_dev
+  pool: 5
+  username: swidjit
+  password: password
+  min_messages: warning
+  host: localhost
