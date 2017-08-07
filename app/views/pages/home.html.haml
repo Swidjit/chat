@@ -1,119 +1,175 @@
-!!!
-%html{:lang => "en"}
-  %head
-    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
-    %meta{:content => "IE=Edge", "http-equiv" => "X-UA-Compatible"}/
-    :css
-      #speechActivity {
-          position: absolute;
-          width: 30px;
+
+:css
+  #speechActivity {
+      position: absolute;
+      width: 30px;
+  }
+
+  #networkActivity {
+      position: absolute;
+      width: 30px;
+      top: 40px;
+  }
+
+  .hidden {
+      display: none;
+  }
+  .choice:hover {
+    background: blue;
+    color: white;
+  }
+%img#speechActivity.hidden{:src => "waiting.gif"}/
+%img#networkActivity.hidden{:src => "radio.gif"}/
+%table{:width => "100%"}
+  %tr
+    %td
+    %td
+      %h1 BingSpeech.js using silences detection
+      %h2 Microsoft Cognitive Services
+  %tr
+    %td{:align => "right"}
+      %a{:href => "https://www.microsoft.com/cognitive-services/en-us/sign-up", :target => "_blank"}> Subscription
+      \:
+    %td
+      %input#key{:size => "40", :type => "text", :value => "YOUR_BING_SPEECH_API_KEY"}/
+  %tr
+    %td
+    %td{:align => "left"}
+      %select#languageoptions
+        %option{:value => "zh-CN"} Chinese - CN
+        %option{:value => "en-GB"} English - GB
+        %option{:selected => "selected", :value => "en-US"} English - US
+        %option{:value => "fr-FR"} French - FR
+        %option{:value => "de-DE"} German - DE
+        %option{:value => "it-IT"} Italian - IT
+        %option{:value => "es-ES"} Spanish - ES
+  %tr
+    %td
+    %td
+      %button#createBtn{:onclick => "createAndSetupClient()"} Create
+      %button#startBtn{:disabled => "disabled", :onclick => "start()"} Start
+      %button#stopBtn{:disabled => "disabled", :onclick => "stop()"} Stop
+  %tr
+    %td
+    %td
+      %textarea#output{:style => "width:400px;height:200px"}
+%ul#wavFiles
+
+%input#chat{:type=>'text', :placeholder => 'Search by Dealmaker Name', :style => "width:300px"}
+#search-result
+#filtered-users
+:javascript
+  var client;
+  var languageoptions = document.getElementById("languageoptions");
+  var speechActivity = document.getElementById("speechActivity");
+  var networkActivity = document.getElementById("networkActivity");
+
+  languageoptions.addEventListener("change", function () {
+      createAndSetupClient();
+  });
+
+
+  function setText(text) {
+      document.getElementById("output").value += text + "\n";
+  }
+
+  function start() {
+      document.getElementById("startBtn").disabled = true;
+      document.getElementById("stopBtn").disabled = false;
+      client.startMicAndContinuousRecognition();
+  }
+
+  function stop() {
+      document.getElementById("startBtn").disabled = false;
+      document.getElementById("stopBtn").disabled = true;
+      client.endMicAndContinuousRecognition();
+  }
+
+  function createAndSetupClient() {
+      document.getElementById("startBtn").disabled = false;
+
+      if (client) {
+          stop();
       }
 
-      #networkActivity {
-          position: absolute;
-          width: 30px;
-          top: 40px;
+      client = new BingSpeech.RecognitionClient("f80517976240427d895b013aafe46ab9");
+
+      client.onFinalResponseReceived = function (response) {
+          console.log('hey');
+          setText(response);
       }
 
-      .hidden {
-          display: none;
+      client.onError = function (code, requestId) {
+          console.log("<Error with request n°" + requestId + ">");
       }
-  %body{:style => "font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"}
-    %img#speechActivity.hidden{:src => "waiting.gif"}/
-    %img#networkActivity.hidden{:src => "radio.gif"}/
-    %table{:width => "100%"}
-      %tr
-        %td
-        %td
-          %h1 BingSpeech.js using silences detection
-          %h2 Microsoft Cognitive Services
-      %tr
-        %td{:align => "right"}
-          %a{:href => "https://www.microsoft.com/cognitive-services/en-us/sign-up", :target => "_blank"}> Subscription
-          \:
-        %td
-          %input#key{:size => "40", :type => "text", :value => "YOUR_BING_SPEECH_API_KEY"}/
-      %tr
-        %td
-        %td{:align => "left"}
-          %select#languageoptions
-            %option{:value => "zh-CN"} Chinese - CN
-            %option{:value => "en-GB"} English - GB
-            %option{:selected => "selected", :value => "en-US"} English - US
-            %option{:value => "fr-FR"} French - FR
-            %option{:value => "de-DE"} German - DE
-            %option{:value => "it-IT"} Italian - IT
-            %option{:value => "es-ES"} Spanish - ES
-      %tr
-        %td
-        %td
-          %button#createBtn{:onclick => "createAndSetupClient()"} Create
-          %button#startBtn{:disabled => "disabled", :onclick => "start()"} Start
-          %button#stopBtn{:disabled => "disabled", :onclick => "stop()"} Stop
-      %tr
-        %td
-        %td
-          %textarea#output{:style => "width:400px;height:200px"}
-    %ul#wavFiles
-%html
-  :javascript
-    var client;
-    var languageoptions = document.getElementById("languageoptions");
-    var speechActivity = document.getElementById("speechActivity");
-    var networkActivity = document.getElementById("networkActivity");
 
-    languageoptions.addEventListener("change", function () {
-        createAndSetupClient();
+      client.onVoiceDetected = function () {
+          speechActivity.classList.remove("hidden");
+      }
+
+      client.onVoiceEnded = function () {
+          speechActivity.classList.add("hidden");
+      }
+
+      client.onNetworkActivityStarted = function () {
+          networkActivity.classList.remove("hidden");
+      }
+
+      client.onNetworkActivityEnded = function () {
+          networkActivity.classList.add("hidden");
+      }
+  }
+
+
+:javascript
+
+  var phrase = ''
+
+  jQuery(function(){
+      jQuery('input#chat')
+        .data('timeout', null)
+        .keyup(function(){
+            clearTimeout(jQuery(this).data('timeout'));
+            jQuery(this).data('timeout', setTimeout(function(){
+             if($("input#chat").val().length > 0) {
+              str = $("input#chat").val().length;
+              console.log(str);
+              q = $("input#chat").val().slice(phrase.length);
+               $.post('/chat', { q: q}, function(data) {
+                  Jaml.register('choice', function(choice) {
+                    div({cls: "choice"},
+                      p(phrase + choice.str)
+                    );
+                  });
+
+
+
+                   if(data.length > 0){
+                     console.log('sdsd');
+                     $("#search-result").html("");
+                     $(data).each(function(idx, d){
+                        console.log(d);
+                       $("#search-result").append(Jaml.render('choice',d));
+                       $('#search-result').css('display','block');
+                     })
+                   }else{
+                     $("#search-result").html("<p>No suggestions found.</p>")
+                   }
+
+               }, "json");
+             }
+             else {
+               $('#search-result').css('display','none');
+             }
+            //timeout function
+
+            }, 500));
+        });
     });
 
-
-    function setText(text) {
-        document.getElementById("output").value += text + "\n";
-    }
-
-    function start() {
-        document.getElementById("startBtn").disabled = true;
-        document.getElementById("stopBtn").disabled = false;
-        client.startMicAndContinuousRecognition();
-    }
-
-    function stop() {
-        document.getElementById("startBtn").disabled = false;
-        document.getElementById("stopBtn").disabled = true;
-        client.endMicAndContinuousRecognition();
-    }
-
-    function createAndSetupClient() {
-        document.getElementById("startBtn").disabled = false;
-
-        if (client) {
-            stop();
-        }
-
-        client = new BingSpeech.RecognitionClient("f80517976240427d895b013aafe46ab9");
-
-        client.onFinalResponseReceived = function (response) {
-            console.log('hey');
-            setText(response);
-        }
-
-        client.onError = function (code, requestId) {
-            console.log("<Error with request n°" + requestId + ">");
-        }
-
-        client.onVoiceDetected = function () {
-            speechActivity.classList.remove("hidden");
-        }
-
-        client.onVoiceEnded = function () {
-            speechActivity.classList.add("hidden");
-        }
-
-        client.onNetworkActivityStarted = function () {
-            networkActivity.classList.remove("hidden");
-        }
-
-        client.onNetworkActivityEnded = function () {
-            networkActivity.classList.add("hidden");
-        }
-    }
+    $(document).on('click','.choice',function() {
+      $('#chat').val($(this).text().trim() + ' ');
+      phrase = $('#chat').val();
+      $('#chat').focus();
+      $('#search-result').empty();
+    });
