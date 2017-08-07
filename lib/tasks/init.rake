@@ -18,6 +18,16 @@ namespace :init do
 
   end
 
-
+  task :import => :environment do
+    Phrase.delete_all
+    files = ['phrases.csv','nouns.csv','core.csv']
+    files.each do |f|
+      file = File.open(f)
+      file.each do |line|
+        Phrase.create(:str=>line.downcase) if line.length > 0
+      end
+    end
+    puts Phrase.all.count
+  end
 
 end

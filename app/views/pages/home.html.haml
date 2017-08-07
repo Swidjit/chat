@@ -18,31 +18,16 @@
     background: blue;
     color: white;
   }
+
+  .chunk {
+    margin: 3px 5px;
+    background-color: #eee;
+    padding: 4px 6px;
+    display: inline;
+  }
 %img#speechActivity.hidden{:src => "waiting.gif"}/
 %img#networkActivity.hidden{:src => "radio.gif"}/
 %table{:width => "100%"}
-  %tr
-    %td
-    %td
-      %h1 BingSpeech.js using silences detection
-      %h2 Microsoft Cognitive Services
-  %tr
-    %td{:align => "right"}
-      %a{:href => "https://www.microsoft.com/cognitive-services/en-us/sign-up", :target => "_blank"}> Subscription
-      \:
-    %td
-      %input#key{:size => "40", :type => "text", :value => "YOUR_BING_SPEECH_API_KEY"}/
-  %tr
-    %td
-    %td{:align => "left"}
-      %select#languageoptions
-        %option{:value => "zh-CN"} Chinese - CN
-        %option{:value => "en-GB"} English - GB
-        %option{:selected => "selected", :value => "en-US"} English - US
-        %option{:value => "fr-FR"} French - FR
-        %option{:value => "de-DE"} German - DE
-        %option{:value => "it-IT"} Italian - IT
-        %option{:value => "es-ES"} Spanish - ES
   %tr
     %td
     %td
@@ -54,10 +39,11 @@
     %td
       %textarea#output{:style => "width:400px;height:200px"}
 %ul#wavFiles
-
+#comment
+%hr
 %input#chat{:type=>'text', :placeholder => 'Search by Dealmaker Name', :style => "width:300px"}
 #search-result
-#filtered-users
+
 :javascript
   var client;
   var languageoptions = document.getElementById("languageoptions");
@@ -132,20 +118,14 @@
             clearTimeout(jQuery(this).data('timeout'));
             jQuery(this).data('timeout', setTimeout(function(){
              if($("input#chat").val().length > 0) {
-              str = $("input#chat").val().length;
-              console.log(str);
-              q = $("input#chat").val().slice(phrase.length);
+              q = $("input#chat").val().trim();
                $.post('/chat', { q: q}, function(data) {
                   Jaml.register('choice', function(choice) {
                     div({cls: "choice"},
                       p(phrase + choice.str)
                     );
                   });
-
-
-
-                   if(data.length > 0){
-                     console.log('sdsd');
+                  if(data.length > 0){
                      $("#search-result").html("");
                      $(data).each(function(idx, d){
                         console.log(d);
@@ -168,8 +148,11 @@
     });
 
     $(document).on('click','.choice',function() {
-      $('#chat').val($(this).text().trim() + ' ');
-      phrase = $('#chat').val();
+
+      phrase = $(this).text().trim() + ' ';
+      $('#comment').html('<div class="chunk">'+ phrase +'</chunk>');
+      $('#chat').val('');
       $('#chat').focus();
+
       $('#search-result').empty();
     });
