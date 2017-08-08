@@ -38,97 +38,79 @@
     font-size: 1.2em;
   }
 
+  #stopBtn {
+    display:none;
+  }
+  #stopBtn, #startBtn {
+    margin-top: 10px;
+  }
+  #message {
+    color:red;
+  }
+
 
 %img#speechActivity.hidden{:src => "waiting.gif"}/
 %img#networkActivity.hidden{:src => "radio.gif"}/
-%table{:width => "100%"}
-  %tr
-    %td
-    %td
-      %button#createBtn{:onclick => "createAndSetupClient()"} Create
-      %button#startBtn{:disabled => "disabled", :onclick => "start()"} Start
-      %button#stopBtn{:disabled => "disabled", :onclick => "stop()"} Stop
-  %tr
-    %td
-    %td
-      %textarea#output{:style => "width:400px;height:200px"}
 %ul#wavFiles
 #chatbox
   #comment
-  %input#chat{:type=>'text', :placeholder => 'talk', :style => "width:300px"}
+  %input#chat{:type=>'text', :placeholder => 'talk', :style => "width:300px; height: 40px; font-size: 1.2em;"}
     #search-result
+  %button#startBtn{:onclick => "start()"}
+    =image_tag 'mic.png'
+  %button#stopBtn{:onclick => "stop()"}
+    off
 
-
-
+#message
 :javascript
   var client;
-  var speechActivity = document.getElementById("speechActivity");
-  var networkActivity = document.getElementById("networkActivity");
 
-  function setText(text) {
-      document.getElementById("output").value += text + "\n";
+  if (client) {
+      stop();
+  }
+
+  client = new BingSpeech.RecognitionClient("f80517976240427d895b013aafe46ab9");
+
+  client.onFinalResponseReceived = function (response) {
+      response = response.replace(/[^a-zA-Z 0-9]+/g, '').toLowerCase();
+      $.post('/check-validity', {q:response}, function(data) {
+        if(data["success"] == true) {
+          console.log('valid');
+          console.log(response);
+          console.log(phrase);
+          phrase += response + ' ';
+          console.log(phrase);
+          $('#comment').html('<div class="chunk">'+ phrase +'</chunk>');
+          $('#chat').val('');
+          $('#chat').focus();
+          $('#chat').css('color','green');
+          $('#search-result').empty();
+          entries.push(response);
+        }
+        else {
+          $('#message').html('Invalid text: ' + response);
+        }
+      });
+  }
+
+  client.onError = function (code, requestId) {
+      console.log("<Error with request n°" + requestId + ">");
   }
 
   function start() {
-      document.getElementById("startBtn").disabled = true;
-      document.getElementById("stopBtn").disabled = false;
+      $("#startBtn").hide();
+      $("#stopBtn").show();
       client.startMicAndContinuousRecognition();
   }
 
   function stop() {
-      document.getElementById("startBtn").disabled = false;
-      document.getElementById("stopBtn").disabled = true;
+      $("#stopBtn").hide();
+      $("#startBtn").show();
       client.endMicAndContinuousRecognition();
   }
 
-  function createAndSetupClient() {
-      document.getElementById("startBtn").disabled = false;
-
-      if (client) {
-          stop();
-      }
-
-      client = new BingSpeech.RecognitionClient("f80517976240427d895b013aafe46ab9");
-
-      client.onFinalResponseReceived = function (response) {
-          console.log('hey there');
-          response = response.replace(/[^a-zA-Z 0-9]+/g, '').toLowerCase();
-          $.post('/check-validity', {q:response}, function(data) {
-            setText(response);
-            if(data["success"] == true) {
-              $('#output').css('color','green');
-
-            }
-            else {
-              $('#output').css('color','red');
-            }
-          });
-      }
-
-      client.onError = function (code, requestId) {
-          console.log("<Error with request n°" + requestId + ">");
-      }
-
-      client.onVoiceDetected = function () {
-          speechActivity.classList.remove("hidden");
-      }
-
-      client.onVoiceEnded = function () {
-          speechActivity.classList.add("hidden");
-      }
-
-      client.onNetworkActivityStarted = function () {
-          networkActivity.classList.remove("hidden");
-      }
-
-      client.onNetworkActivityEnded = function () {
-          networkActivity.classList.add("hidden");
-      }
-  }
-
-
 :javascript
-
+  $('#chat').focus();
   var phrase = ''
   var entries = [];
 
@@ -177,7 +159,6 @@
       $('#chat').css('color','green');
       $('#search-result').empty();
       entries.push($(this).text().trim());
-      console.log(entries);
     });
 
   $(window).keyup(function (e) {
