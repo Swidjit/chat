@@ -1,22 +1,20 @@
 
 :css
+  #chatbox {
+    margin: 0px 20px;
+    border: 1px solid gray;
+    height: 300px;
+    vertical-align:bottom;
 
-  #speechActivity {
-      position: absolute;
-      width: 30px;
   }
 
-  #networkActivity {
-      position: absolute;
-      width: 30px;
-      top: 40px;
-  }
 
   .hidden {
       display: none;
   }
   .choice {
     padding: 0px 5px;
+    margin-top: 5px;
   }
   .choice:hover {
     background: blue;
@@ -24,26 +22,27 @@
   }
 
   .chunk {
-    margin: 3px 5px;
-    padding: 4px 6px;
+    margin: 3px 1px;
+    padding: 4px 2px;
     display: inline;
+    background: #eee;
   }
 
-  #chatbox {
-    text-align: right;
-  }
   #comment {
     float:right;
     text-align: right;
     font-size: 1.6em;
     margin-top: 12px;
+    margin-left: 20px;
   }
   #chat {
     width: 300px;
     margin-right: 60px;
     float: right;
     margin-top: 10px;
+    margin-left: 5px;
   }
+
 
   #stopBtn {
     display:none;
@@ -51,8 +50,8 @@
   #stopBtn, #startBtn {
     margin-top: 10px;
     position: absolute;
-    top: 0px;
-    right: 0px;
+    top: 310px;
+    right: 20px;
   }
   #message {
     color:red;
@@ -63,11 +62,14 @@
     font-size: 1.5em;
   }
   #search-result {
-    position: absolute;
-    top: 60px;
-    right: 175px;
+    float: right;
     font-size: 1.5em;
     text-align: left;
+    width: 300px;
+    margin-right: 65px;
+    top: 0px;
+    clear:both;
+
   }
   #send {
     display: none;
@@ -75,21 +77,27 @@
     color: white;
     padding: 4px 6px;
     position: absolute;
-    top: 75px;
-    right: 5px;
+    top: 375px;
+    right: 395px;
+    text-align: right;
     font-weight: 600;
     font-size: 1.5em;
   }
 
+  .phrase {
+  }
+#chatbox
 %button#startBtn{:onclick => "start()"}
   =image_tag 'mic.png'
 %button#stopBtn{:onclick => "stop()"}
   off
 %input#chat{:type=>'text', :placeholder => 'talk'}
-  #search-result
 #comment
+#search-result
+%br
 #message
-%button#send send
+%button#send{:onclick => "send()"} send
+
 :javascript
   var client;
 
@@ -108,7 +116,7 @@
           console.log(phrase);
           phrase += response + ' ';
           console.log(phrase);
-          $('#comment').html('<div class="chunk">'+ phrase +'</chunk>');
+          $('#comment').append('<div class="chunk">'+ response +'</chunk>');
           $('#chat').val('');
           $('#chat').focus();
           $('#chat').css('color','green');
@@ -124,6 +132,13 @@
 
   client.onError = function (code, requestId) {
       console.log("<Error with request n°" + requestId + ">");
+  }
+
+  function send() {
+    $('#chatbox').prepend('<div class="phrase">'+phrase+'</phrase>');
+    $('#comment').empty();
+    phrase = '';
+    $('#send').hide();
   }
 
   function start() {
@@ -154,7 +169,7 @@
                $.post('/chat', { q: q}, function(data) {
                   Jaml.register('choice', function(choice) {
                     div({cls: "choice"},
-                      p(phrase + choice.str)
+                      span(choice.str)
                     );
                   });
                   if(data.length > 0){
@@ -181,8 +196,8 @@
 
     $(document).on('click','.choice',function() {
 
-      phrase = $(this).text().trim() + ' ';
-      $('#comment').html('<div class="chunk">'+ phrase +'</chunk>');
+      phrase += $(this).text().trim() + ' ';
+      $('#comment').append('<div class="chunk">'+ $(this).text().trim() +'</chunk>');
       $('#chat').val('');
       $('#chat').focus();
       $('#chat').css('color','green');
@@ -199,8 +214,18 @@
       console.log($('#comment').first().text().split(txt)[0]);
     }
     if (e.keyCode === 0 || e.keyCode === 32 || e.keyCode === 8) {
-      $.post('/check-validity', {q:phrase+' '+$('#chat').val()}, function(data) {
+      $.post('/check-validity', {q:$('#chat').val()}, function(data) {
         if(data["success"] == true) {
+          if(data["mode"] == 'exact') {
+            txt = $('#chat').val();
+            word = txt.split(' ')[0];
+            phrase += word + ' ';
+            $('#comment').append('<div class="chunk">'+ word +'</chunk>');
+            remainder= txt.split(' ')[1];
+            $('#chat').val(remainder);          }
+          else {
+          }
+
           $('#chat').css('color','green');
           $('#send').show();
         }

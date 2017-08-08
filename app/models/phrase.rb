@@ -29,4 +29,14 @@ class Phrase < ActiveRecord::Base
     return is_valid
   end
 
+  def self.check_if_exact(input)
+    p = Phrase.find_by_str(input.strip)
+    puts input.strip
+    if p.present?
+      return 'exact'
+    else
+      return 'partial'
+    end
+  end
+
 end

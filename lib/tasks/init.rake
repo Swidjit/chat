@@ -24,7 +24,7 @@ namespace :init do
     files.each do |f|
       file = File.open(f)
       file.each do |line|
-        Phrase.create(:str=>line.downcase) if line.length > 0
+        Phrase.create(:str=>line.downcase.gsub(/[^0-9a-z ]/i, '')) if line.length > 0
       end
     end
     puts Phrase.all.count
