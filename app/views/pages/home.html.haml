@@ -34,6 +34,11 @@
     font-size: 1.2em;
     text-align: left;
   }
+  #output {
+    font-size: 1.2em;
+  }
+
+
 %img#speechActivity.hidden{:src => "waiting.gif"}/
 %img#networkActivity.hidden{:src => "radio.gif"}/
 %table{:width => "100%"}
@@ -86,8 +91,18 @@
       client = new BingSpeech.RecognitionClient("f80517976240427d895b013aafe46ab9");
 
       client.onFinalResponseReceived = function (response) {
-          console.log('hey');
-          setText(response);
+          console.log('hey there');
+          response = response.replace(/[^a-zA-Z 0-9]+/g, '').toLowerCase();
+          $.post('/check-validity', {q:response}, function(data) {
+            setText(response);
+            if(data["success"] == true) {
+              $('#output').css('color','green');
+
+            }
+            else {
+              $('#output').css('color','red');
+            }
+          });
       }
 
       client.onError = function (code, requestId) {
