@@ -115,6 +115,7 @@
 :javascript
 
   var phrase = ''
+  var entries = [];
 
   jQuery(function(){
       jQuery('input#chat')
@@ -122,7 +123,7 @@
         .keyup(function(){
             clearTimeout(jQuery(this).data('timeout'));
             jQuery(this).data('timeout', setTimeout(function(){
-             if($("input#chat").val().length > 0) {
+             if($("input#chat").val().length > 2) {
               q = $("input#chat").val().trim();
                $.post('/chat', { q: q}, function(data) {
                   Jaml.register('choice', function(choice) {
@@ -160,9 +161,17 @@
       $('#chat').focus();
       $('#chat').css('color','green');
       $('#search-result').empty();
+      entries.push($(this).text().trim());
+      console.log(entries);
     });
 
   $(window).keyup(function (e) {
+    if (e.keyCode === 8 && $('#chat').val() == '') {
+      console.log('empty');
+      txt = entries.pop();
+      console.log(txt);
+      console.log($('#comment').first().text().split(txt)[0]);
+    }
     if (e.keyCode === 0 || e.keyCode === 32 || e.keyCode === 8) {
       $.post('/check-validity', {q:phrase+' '+$('#chat').val()}, function(data) {
         if(data["success"] == true) {
