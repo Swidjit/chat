@@ -13,3 +13,95 @@
  *= require_tree .
  *= require_self
  */
+ #chatbox {
+   margin: 0px 20px;
+   border: 1px solid gray;
+   height: 300px;
+   vertical-align:bottom;
+
+ }
+
+
+ .hidden {
+     display: none;
+ }
+ .choice {
+   padding: 0px 5px;
+   margin-top: 5px;
+   display: inline;
+ }
+ .choice-count {
+   display: inline;
+ }
+ .choice:hover {
+   background: blue;
+   color: white;
+ }
+
+ .chunk {
+   margin: 3px 1px;
+   padding: 4px 2px;
+   display: inline;
+   background: #eee;
+ }
+
+ #comment {
+   float:right;
+   text-align: right;
+   font-size: 1.6em;
+   margin-top: 12px;
+   margin-left: 20px;
+ }
+ #chat {
+   width: 300px;
+   margin-right: 60px;
+   float: right;
+   margin-top: 10px;
+   margin-left: 5px;
+ }
+
+
+ #stopBtn {
+   display:none;
+ }
+ #stopBtn, #startBtn {
+   margin-top: 10px;
+   position: absolute;
+   top: 310px;
+   right: 20px;
+ }
+ #message {
+   color:red;
+ }
+ input#chat, input#chat:focus {
+   border: none;
+   outline: none;
+   font-size: 1.5em;
+ }
+ #search-result {
+   float: right;
+   font-size: 1.5em;
+   text-align: left;
+   width: 300px;
+   margin-right: 65px;
+   top: 0px;
+   clear:both;
+
+ }
+ #send {
+   display: none;
+   background-color: green;
+   color: white;
+   padding: 4px 6px;
+   position: absolute;
+   top: 375px;
+   right: 395px;
+   text-align: right;
+   font-weight: 600;
+   font-size: 1.5em;
+ }
+
+ .chunk:hover {
+   border: 1px solid purple;
+   cursor: pointer;
+ }
