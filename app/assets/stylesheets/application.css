@@ -28,6 +28,10 @@
  .choice {
    padding: 0px 5px;
    margin-top: 5px;
+   display: inline;
+ }
+ .choice-count {
+   display: inline;
  }
  .choice:hover {
    background: blue;

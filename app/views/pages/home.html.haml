@@ -41,17 +41,19 @@
       console.log("<Error with request n°" + requestId + ">");
   }
 
-  function send() {
+  function assemblePhrase() {
     phrase = '';
     $('#comment .chunk').each(function() {
       str = $(this).text();
       phrase += str + ' ';
     });
-    phrase = phrase.trim();
+    return phrase.trim();
+  }
 
-    $('#chatbox').prepend('<div class="phrase">'+phrase+'</phrase>');
+  function send() {
+
+    $('#chatbox').prepend('<div class="phrase">' + assemblePhrase() + '</phrase>');
     $('#comment').empty();
-    phrase = '';
     $('#send').hide();
   }
 
@@ -67,6 +69,7 @@
       client.endMicAndContinuousRecognition();
   }
 
+
 :javascript
   $('#chat').focus();
   var phrase = ''
@@ -81,18 +84,22 @@
              if($("input#chat").val().length > 2) {
               q = $("input#chat").val().trim();
                $.post('/chat', { q: q}, function(data) {
-                  Jaml.register('choice', function(choice) {
+                  Jaml.register('choice', function(choice, val) {
                     div({cls: "choice"},
                       span(choice.str)
                     );
                   });
                   if(data.length > 0){
                      $("#search-result").html("");
+                     count = 0;
                      $(data).each(function(idx, d){
-                        console.log(d);
-                       $("#search-result").append(Jaml.render('choice',d));
-                       $('#search-result').css('display','block');
-                     })
+
+                        $("#search-result").append(Jaml.render('choice',d));
+                        $("#search-result").append('<div class="choice-count">'+count+'</span>');
+                        $("#search-result").append('<br>');
+                        count++;
+                     });
+                     $('#search-result').css('display','block');
                    }else{
                      $("#search-result").html("<p>No suggestions found.</p>")
                    }
@@ -110,13 +117,11 @@
 
     $(document).on('click','.choice',function() {
 
-      phrase += $(this).text().trim() + ' ';
       $('#comment').append('<div class="chunk">'+ $(this).text().trim() +'</chunk>');
       $('#chat').val('');
       $('#chat').focus();
       $('#chat').css('color','green');
       $('#search-result').empty();
-      entries.push($(this).text().trim());
       $('#send').show();
     });
     $(document).on('click','.chunk',function() {
@@ -125,16 +130,28 @@
     });
 
   $(window).keydown(function (e) {
-    if (e.keyCode === 8 && $('#chat').val() == '') {
-      $('#comment').children().last().remove();
+    var charCode = (e.which) ? e.which : e.keyCode;
+    if ((charCode >= 48 && charCode <= 57) || (charCode >= 96 && charCode <= 105)) {
+        text = $('#search-result .choice').eq(e.key).text();
+        e.preventDefault();
+        $('#comment').append('<div class="chunk">'+ text +'</chunk>');
+        $('#chat').val('');
+        $('#chat').focus();
+        $('#chat').css('color','green');
+        $('#search-result').empty();
+        $('#send').show();
     }
-    if (e.keyCode === 0 || e.keyCode === 32 || e.keyCode === 8) {
+    if (e.keyCode === 8) {
+      if($('#chat').val() == '') {
+        $('#comment').children().last().remove();
+      }
+    }
+    if (e.keyCode === 0 || e.keyCode === 32) {
       $.post('/check-validity', {q:$('#chat').val()}, function(data) {
         if(data["success"] == true) {
           if(data["mode"] == 'exact') {
             txt = $('#chat').val();
             word = txt.split(' ')[0];
-            phrase += word + ' ';
             $('#comment').append('<div class="chunk">'+ word +'</chunk>');
             remainder= txt.split(' ')[1];
             $('#chat').val(remainder);          }
