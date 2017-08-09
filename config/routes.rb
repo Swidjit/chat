@@ -6,4 +6,6 @@ Rails.application.routes.draw do
   post '/chat' => 'phrases#autocomplete'
   post '/check-validity' => 'phrases#check_validity'
 
+  post '/interpret' => 'intents#interpret'
+
 end
