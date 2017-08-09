@@ -146,6 +146,29 @@
         $('#comment').children().last().remove();
       }
     }
+    if (e.keyCode === 13) {
+      $.post('/check-validity', {q:$('#chat').val()}, function(data) {
+        if(data["success"] == true) {
+          if(data["mode"] == 'exact') {
+            $('#comment').append('<div class="chunk">'+ $('#chat').val() +'</chunk>');
+            $('#chat').val('');
+            $('#send').show();
+          }
+          else {
+            if ($('#chat').val().split(' ')[1].length > 1) {
+              $('#comment').append('<div class="chunk">'+ $('#chat').val() +'</chunk>');
+              $('#chat').val('');
+              $('#send').show();
+            }
+          }
+
+        }
+        else {
+          $('#chat').css('color','red');
+          $('#send').hide();
+        }
+      });
+    }
     if (e.keyCode === 0 || e.keyCode === 32) {
       $.post('/check-validity', {q:$('#chat').val()}, function(data) {
         if(data["success"] == true) {
