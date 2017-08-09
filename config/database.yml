@@ -3,7 +3,7 @@ development:
   encoding: unicode
   database: chatter_dev
   pool: 5
-  username: swidjit
-  password: password
+  username: acolket
+  password: BNAZ0he7leqKfAoe
   min_messages: warning
   host: localhost
