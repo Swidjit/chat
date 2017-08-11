@@ -1,0 +1,47 @@
+%hr
+%h4 voice command intent
+#chat
+%input#command
+%button#send-command send command
+#autocomplete-options
+
+:javascript
+
+  jQuery(function(){
+      jQuery('input#command')
+        .data('timeout', null)
+        .keydown(function(e){
+          var charCode = (e.which) ? e.which : e.keyCode;
+          if ((charCode >= 48 && charCode <= 57) || (charCode >= 96 && charCode <= 105)) {
+              text = $('#autocomplete-options .option').eq(e.key).text();
+              console.log(text);
+              e.preventDefault();
+              $('#chat').append('<div class="chunk">'+ text +'</chunk>');
+              $('#chat').val('');
+              $('#chat').focus();
+              $('#search-result').empty();
+          }
+
+          clearTimeout(jQuery(this).data('timeout'));
+          jQuery(this).data('timeout', setTimeout(function(){
+           if($("input#command").val().length > 2) {
+            q = $("input#command").val().trim();
+            $.post('/recommend', {input:q}, function(data) {
+
+              $('#autocomplete-options').show();
+              $('#autocomplete-options').empty();
+              strings = data["options"].split(',');
+              $.each(strings, function(k,v) {
+                $('#autocomplete-options').append('<div class="option"><div class="option-title">'+v+'</div><div class="option-count">'+k+'</div></div>');
+              });
+
+            });
+           }
+           else {
+             $('#autocomplete-options').css('display','none');
+           }
+          //timeout function
+
+          }, 500));
+        });
+    });

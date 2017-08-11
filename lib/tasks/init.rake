@@ -48,4 +48,17 @@ namespace :init do
     end
   end
 
+  task :break_patterns => :environment do
+    Pattern.all.each do |p|
+      s = p.regexp
+      b = []
+      s.split(/(})/).each_slice(2) { |s| b << s.join }
+      p.r1 = b[0] if b[0]
+      p.r2 = b[1] if b[1]
+      p.r3 = b[2] if b[2]
+      p.r4 = b[3] if b[3]
+      p.save
+    end
+  end
+
 end

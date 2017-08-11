@@ -10,10 +10,6 @@
 #message
 %button#send{:onclick => "send()"} send
 
-%hr
-%h4 voice command intent
-%input#command
-%button#send-command send command
 
 :javascript
   var client;
@@ -203,8 +199,4 @@
     //$('#chat').focus();
   });
 
-  $('#send-command').on('click',function() {
-    $.post('/interpret', {input:$('#command').val()}, function(data) {
-      console.log(data);
-    });
-  });
+

@@ -7,5 +7,7 @@ Rails.application.routes.draw do
   post '/check-validity' => 'phrases#check_validity'
 
   post '/interpret' => 'intents#interpret'
+  post '/recommend' => 'intents#recommend'
 
+  get 'chat' => 'pages#chat'
 end
