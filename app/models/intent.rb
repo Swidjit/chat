@@ -152,4 +152,6 @@ class Intent < ActiveRecord::Base
 
   end
 
+
+
 end

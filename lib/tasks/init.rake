@@ -1,16 +1,12 @@
 namespace :init do
   task :seed => :environment do
     WordSet.delete_all
-    WordSet.create(:keyword=>'explain', :words=>['define','tell','teach','explain','discuss','speak','talk','paraphrase','learn','what is','describe','illustrate','about'])
-    WordSet.create(:keyword=>'clarify', :words=>['again','example','better','clarify','say it another way','more clear','simplify','spell out', 'easy'])
-    WordSet.create(:keyword=>'detail', :words=>['more','further','better','again','with examples','detail'])
-    WordSet.create(:keyword=>'subject', :words=>['mass','relativity','gravity','light','energy','matter','space'])
-    WordSet.create(:keyword=>'topic', :words=>['atom bomb', 'black holes', 'quantum mechanics', 'solar system', 'twin paradox','special relativity','sun','universe','wormhole'])
-    WordSet.create(:keyword=>'like', :words=>['like','fond','enjoy','appreciate','dig','pleasure','fancy','fun','love','favorite','best'])
-    WordSet.create(:keyword=>'feel', :words=>['feel','opinion','attitude','view','think','stance','perspective','thought'])
-    WordSet.create(:keyword=>'children', :words=>['children','kids','offspring','progeny','child','son','daughter'])
-    WordSet.create(:keyword=>'us', :words=>['us','united states','usa','america'])
-    WordSet.create(:keyword=>'advise', :words=>['advice','advise','suggest','recommend','tip','guidance','directions','counsel'])
+    WordSet.create(:keyword=>'are', :words=>['are','is','am'])
+    WordSet.create(:keyword=>'was', :words=>['was','were'])
+    WordSet.create(:keyword=>'do', :words=>['do','does'])
+    WordSet.create(:keyword=>'go', :words=>['go','goes'])
+    WordSet.create(:keyword=>'you', :words=>['you','he','she','they','we','I'])
+
 
     #seed intent
     a = Intent.create(:name=>'test',:response=>'yes',:pattern=>'this ^ test', :grouping_id => 1)
@@ -54,10 +50,30 @@ namespace :init do
       b = []
       s.split(/(})/).each_slice(2) { |s| b << s.join }
       p.r1 = b[0] if b[0]
-      p.r2 = b[1] if b[1]
-      p.r3 = b[2] if b[2]
-      p.r4 = b[3] if b[3]
+      p.r2 = b[0]+b[1] if b[1]
+      p.r3 = b[0]+b[1]+b[2] if b[2]
+      p.r4 = b[0]+b[1]+b[2]+b[3] if b[3]
       p.save
+    end
+  end
+
+  task :find_wildcards => :environment do
+    input = 'where is that he now going'
+    pattern = Pattern.find(171)
+    pttrn = pattern.pattern
+    response = pattern.intent.response
+    parts = pttrn.split(' ')
+    parts.each do |p|
+      match = Regexp.new(/^\[((?!\s).)*\]$/) =~ p
+      if match
+        set = WordSet.find_by_keyword(p[1..-2])
+        word = ''
+        set.words.each do |w|
+          word = w if input.scan(/\s#{w}\s/).present?
+        end
+        response = response.sub('*',word)
+      end
+
     end
   end
 
