@@ -9,7 +9,7 @@ class Pattern < ActiveRecord::Base
 
   def make_regexp
     @intent = self.intent
-    regexp = self.pattern.dup
+    regexp = self.pattern.dup.downcase
     words = regexp.split(" ")
     words.each do |word|
       if word.include? '/'
@@ -22,6 +22,7 @@ class Pattern < ActiveRecord::Base
     regexp = regexp.gsub('^ ','.{0,60}').gsub(' ^','.{0,60}').gsub(' *','.{1,60}').gsub('* ','.{1,60}').gsub('^','.{1,60}').gsub(' [','.{0,60}[')
     regexp = regexp.gsub(' .{0,60}','.{0,60}')
     regexp = regexp.gsub(' .{1,60}','.{1,60}')
+    regexp = '.{0,60}' + regexp + '.{0,60}'
     self.regexp = regexp
     puts "r:#{self.regexp}"
     chunks = self.pattern.split(' ')
@@ -52,6 +53,32 @@ class Pattern < ActiveRecord::Base
         end
         puts word
         resp = resp.sub('*',word)
+      end
+      puts resp
+    end
+    return resp
+  end
+
+  def respond2(input)
+    resp = self.intent.response
+    puts resp
+    parts = self.pattern.split(' ')
+    parts.each do |p|
+      match = Regexp.new(/^\[((?!\s).)*\]$/) =~ p
+      if match
+        set = WordSet.find_by_keyword(p[1..-2])
+        word = ''
+        matched = false
+        set.words.each do |w|
+          word = w if input.scan(/\s#{w}\s/).present?
+          matched = true
+        end
+        puts word
+        if matched
+          resp = resp.sub('*',word)
+        else
+          resp = resp.sub('*',p)
+        end
       end
       puts resp
     end

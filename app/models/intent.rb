@@ -16,7 +16,7 @@ class Intent < ActiveRecord::Base
     time = Benchmark.measure do
       #remove all non alphanumeric characters
       input = input.gsub(/[^a-z0-9\s]/i, '')
-
+      puts input
       match_count = []
       records = Pattern.where("pattern = ?",input)
       if records.present?
@@ -30,6 +30,7 @@ class Intent < ActiveRecord::Base
         words.each do |word|
           records = Pattern.find_by_sql("select * from patterns where patterns.regexp like '%"+word+"%'")
           records.each do |p|
+            puts p.regexp
             result= Regexp.new(p.regexp) =~ input
             if(result==0)
               match_count << p.id

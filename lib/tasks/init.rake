@@ -47,6 +47,9 @@ namespace :init do
   task :break_patterns => :environment do
     Pattern.all.each do |p|
       s = p.regexp
+      puts s
+      s = s[7..-8]
+      puts s
       b = []
       s.split(/(})/).each_slice(2) { |s| b << s.join }
       p.r1 = b[0] if b[0]

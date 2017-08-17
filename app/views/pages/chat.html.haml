@@ -14,11 +14,10 @@
           var charCode = (e.which) ? e.which : e.keyCode;
           if ((charCode >= 48 && charCode <= 57) || (charCode >= 96 && charCode <= 105)) {
               text = $('#autocomplete-options .option').eq(e.key).text();
-              console.log(text);
               e.preventDefault();
               $('#chat').append('<div class="chunk">'+ text +'</chunk>');
-              $('#chat').val('');
-              $('#chat').focus();
+              $('#command').val('');
+              $('#command').focus();
               $('#search-result').empty();
           }
 
@@ -45,3 +44,92 @@
           }, 500));
         });
     });
+
+  jQuery(function(){
+      jQuery('input#command2')
+        .data('timeout', null)
+        .keydown(function(e){
+          var charCode = (e.which) ? e.which : e.keyCode;
+          if ((charCode >= 48 && charCode <= 57) || (charCode >= 96 && charCode <= 105)) {
+              text = $('#autocomplete-options2 .option').eq(e.key).text();
+              console.log(text);
+              e.preventDefault();
+              $('#chat2').append('<div class="chunk">'+ text +'</chunk>');
+              $('#chat2').val('');
+              $('#chat2').focus();
+              $('#search-result').empty();
+          }
+
+          clearTimeout(jQuery(this).data('timeout'));
+          jQuery(this).data('timeout', setTimeout(function(){
+           if($("input#command2").val().length > 2) {
+            q = $("input#command2").val().trim();
+            $.post('/recommend2', {input:q}, function(data) {
+
+              $('#autocomplete-options2').show();
+              $('#autocomplete-options2').empty();
+              strings = data["options"].split(',');
+              $.each(strings, function(k,v) {
+                $('#autocomplete-options2').append('<div class="option"><div class="option-title">'+v+'</div><div class="option-count">'+k+'</div></div>');
+              });
+
+            });
+           }
+           else {
+             $('#autocomplete-options2').css('display','none');
+           }
+          //timeout function
+
+          }, 500));
+        });
+    });
+
+%br
+
+%br
+
+%br
+#chatbox
+%button#startBtn{:onclick => "start()"}
+  =image_tag 'mic.png'
+%button#stopBtn{:onclick => "stop()"}
+  off
+
+:javascript
+  var client;
+
+  if (client) {
+      stop();
+  }
+
+  client = new BingSpeech.RecognitionClient("f80517976240427d895b013aafe46ab9");
+
+  client.onFinalResponseReceived = function (response) {
+      response = response.replace(/[^a-zA-Z 0-9]+/g, '').toLowerCase();
+      $.post('/interpret', {input:response}, function(data) {
+        console.log(data);
+        if(data["success"] == true) {
+          $('#chatbox').append('<div>'+data["intent"]+'</div>');
+        }
+        else {
+          $('#message').html('Invalid text: ' + response);
+        }
+      });
+  }
+
+  client.onError = function (code, requestId) {
+      console.log("<Error with request n°" + requestId + ">");
+  }
+
+
+  function start() {
+      $("#startBtn").hide();
+      $("#stopBtn").show();
+      client.startMicAndContinuousRecognition();
+  }
+
+  function stop() {
+      $("#stopBtn").hide();
+      $("#startBtn").show();
+      client.endMicAndContinuousRecognition();
+  }

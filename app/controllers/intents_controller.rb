@@ -12,30 +12,29 @@ class IntentsController < ApplicationController
     choices = ''
     params[:input].split(' ').each do |word|
       records = Pattern.find_by_sql("select * from patterns where patterns.regexp like '%"+word+"%'")
+
       records.each do |p|
+        puts p.regexp
         result= Regexp.new(p.regexp) =~ input
         if(result==0)
-          response = p.respond(input)
-          choices = choices + response + ',' unless choices.include? response
+          choices = choices + p.intent.response + ',' unless choices.include? p.intent.response
         end
       end
       records = Pattern.find_by_sql("select * from patterns where patterns.r1 like '%"+word+"%'")
       records.each do |p|
         result= Regexp.new(p.r1) =~ input
         if(result==0)
-          response = p.respond(input)
-          choices = choices + response + ',' unless choices.include? response
+          choices = choices + p.intent.response + ',' unless choices.include? p.intent.response
         end
       end
       records = Pattern.find_by_sql("select * from patterns where patterns.r2 like '%"+word+"%'")
       records.each do |p|
         result= Regexp.new(p.r2) =~ input
         if(result==0)
-          response = p.respond(input)
-          choices = choices + response + ',' unless choices.include? response
+          choices = choices + p.intent.response + ',' unless choices.include? p.intent.response
         end
       end
-      records = Pattern.find_by_sql("select * from patterns where patterns.r3 like '%"+word +"%'")
+      records = Pattern.find_by_sql("select * from patterns where patterns.r3 like '%"+word+"%'")
       records.each do |p|
         result= Regexp.new(p.r3) =~ input
         if(result==0)
@@ -47,6 +46,5 @@ class IntentsController < ApplicationController
     respond_to do |format|
       format.json { render :json => {:options => choices} }
     end
-
   end
 end
