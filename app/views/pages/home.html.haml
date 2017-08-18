@@ -4,7 +4,6 @@
 %button#stopBtn{:onclick => "stop()"}
   off
 %input#chat{:type=>'text', :placeholder => 'talk'}
-#comment
 #search-result
 %br
 #message
@@ -73,17 +72,20 @@
 
 :javascript
   $('#chat').focus();
-  var phrase = ''
+  var phrase = '';
   var entries = [];
 
   jQuery(function(){
       jQuery('input#chat')
         .data('timeout', null)
-        .keyup(function(){
+        .keyup(function(e){
+          var charCode = (e.which) ? e.which : e.keyCode;
+          if (!(charCode >= 48 && charCode <= 57) && !(charCode >= 96 && charCode <= 105) && !(e.keyCode === 0 || e.keyCode === 32)) {
             clearTimeout(jQuery(this).data('timeout'));
             jQuery(this).data('timeout', setTimeout(function(){
-             if($("input#chat").val().length > 2) {
-              q = $("input#chat").val().trim();
+
+              q = $("input#chat").val().replace(phrase,'').trim();
+              if(q.length > 2) {
                $.post('/chat', { q: q}, function(data) {
                   Jaml.register('choice', function(choice, val) {
                     div({cls: "choice"},
@@ -113,6 +115,7 @@
             //timeout function
 
             }, 500));
+          }
         });
     });
 
@@ -135,9 +138,9 @@
     if ((charCode >= 48 && charCode <= 57) || (charCode >= 96 && charCode <= 105)) {
         text = $('#search-result .choice').eq(e.key).text();
         e.preventDefault();
-        $('#comment').append('<div class="chunk">'+ text +'</chunk>');
-        $('#chat').val('');
-        $('#chat').focus();
+        $('#chat').val(phrase.trim() + ' ' + text.trim() + ' ');
+        phrase = $('#chat').val().trim();
+        $('#send').show();
         $('#chat').css('color','green');
         $('#search-result').empty();
         $('#send').show();
@@ -151,19 +154,9 @@
       if($('#chat').val().length > 0) {
         $.post('/check-validity', {q:$('#chat').val()}, function(data) {
           if(data["success"] == true) {
-            if(data["mode"] == 'exact') {
-              $('#comment').append('<div class="chunk">'+ $('#chat').val() +'</chunk>');
-              $('#chat').val('');
-              $('#send').show();
-            }
-            else {
-              if ($('#chat').val().split(' ')[1].length > 1) {
-                $('#comment').append('<div class="chunk">'+ $('#chat').val() +'</chunk>');
-                $('#chat').val('');
-                $('#send').show();
-              }
-            }
-
+            phrase = $('#chat').val().trim();
+            $('#send').show();
+            console.log('ddddd');
           }
           else {
             $('#chat').css('color','red');
@@ -177,18 +170,13 @@
     }
     if (e.keyCode === 0 || e.keyCode === 32) {
       $.post('/check-validity', {q:$('#chat').val()}, function(data) {
+        console.log(data);
         if(data["success"] == true) {
-          if(data["mode"] == 'exact') {
-            txt = $('#chat').val();
-            word = txt.split(' ')[0];
-            $('#comment').append('<div class="chunk">'+ word +'</chunk>');
-            remainder= txt.split(' ')[1];
-            $('#chat').val(remainder);          }
-          else {
-          }
-
-          $('#chat').css('color','green');
+          phrase = $('#chat').val().trim();
+          console.log(phrase);
           $('#send').show();
+          $('#chat').css('color','green');
+          $("#search-result").html("");
         }
         else {
           $('#chat').css('color','red');

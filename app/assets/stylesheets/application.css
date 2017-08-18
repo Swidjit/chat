@@ -45,17 +45,10 @@
    background: #eee;
  }
 
- #comment {
-   float:right;
-   text-align: right;
-   font-size: 1.6em;
-   margin-top: 12px;
-   margin-left: 20px;
- }q
+
  #chat {
-   width: 300px;
-   margin-right: 60px;
-   float: right;
+ 	width: 100%;
+   display:block;
    margin-top: 10px;
    margin-left: 5px;
  }
@@ -79,7 +72,7 @@
    font-size: 1.5em;
  }
  #search-result {
-   float: right;
+ 	display:block;
    font-size: 1.5em;
    text-align: left;
    width: 300px;
@@ -100,9 +93,6 @@
    background-color: green;
    color: white;
    padding: 4px 6px;
-   position: absolute;
-   top: 375px;
-   right: 395px;
    text-align: right;
    font-weight: 600;
    font-size: 1.5em;
