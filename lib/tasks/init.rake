@@ -16,7 +16,7 @@ namespace :init do
 
   task :import => :environment do
     Phrase.delete_all
-    files = ['phrases.csv','nouns.csv','core.csv','adjectives.csv']
+    files = ['phrases.csv','nouns.csv','core.csv','adjectives.csv','verbs.csv']
     files.each do |f|
       file = File.open(f)
       file.each do |line|

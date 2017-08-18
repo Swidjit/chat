@@ -145,11 +145,6 @@
         $('#search-result').empty();
         $('#send').show();
     }
-    if (e.keyCode === 8) {
-      if($('#chat').val() == '') {
-        $('#comment').children().last().remove();
-      }
-    }
     if (e.keyCode === 13) {
       if($('#chat').val().length > 0) {
         $.post('/check-validity', {q:$('#chat').val()}, function(data) {
@@ -168,23 +163,25 @@
         send();
       }
     }
-    if (e.keyCode === 0 || e.keyCode === 32) {
-      $.post('/check-validity', {q:$('#chat').val(), statement: $('#chat').val()}, function(data) {
-        console.log(data);
-        if(data["success"] == true) {
-          phrase = $('#chat').val().trim();
-          console.log(phrase);
-          $('#send').show();
-          $('#chat').css('color','green');
-          $("#search-result").html("");
-        }
-        else {
-          $('#chat').css('color','red');
-          $('#send').hide();
-        }
-      });
+    if (e.keyCode === 0 || e.keyCode === 32 || e.keyCode === 8) {
+      checkIfValid();
     }
     //$('#chat').focus();
   });
+
+  function checkIfValid() {
+    $.post('/check-validity', {q:$('#chat').val(), statement: $('#chat').val()}, function(data) {
+      if(data["success"] == true) {
+        phrase = $('#chat').val().trim();
+        $('#send').show();
+        $('#chat').css('color','green');
+        $("#search-result").html("");
+      }
+      else {
+        $('#chat').css('color','red');
+        $('#send').hide();
+      }
+    });
+  }
 
 
