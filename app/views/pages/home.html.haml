@@ -169,7 +169,7 @@
       }
     }
     if (e.keyCode === 0 || e.keyCode === 32) {
-      $.post('/check-validity', {q:$('#chat').val()}, function(data) {
+      $.post('/check-validity', {q:$('#chat').val(), statement: $('#chat').val()}, function(data) {
         console.log(data);
         if(data["success"] == true) {
           phrase = $('#chat').val().trim();
