@@ -21,18 +21,16 @@
 
   client.onFinalResponseReceived = function (response) {
       response = response.replace(/[^a-zA-Z 0-9]+/g, '').toLowerCase();
+      $('#chat').val('');
       $.post('/check-validity', {q:response}, function(data) {
         if(data["success"] == true) {
-          phrase += response + ' ';
-          $('#comment').append('<div class="chunk">'+ response +'</chunk>');
-          $('#chat').val('');
-          $('#chat').focus();
-          $('#chat').css('color','green');
-          $('#search-result').empty();
-          $('#send').show();
+          $('#chatbox').prepend('<div class="phrase">' + response + '</phrase>');
+          $('#send').hide();
         }
         else {
-          $('#message').html('Invalid text: ' + response);
+          $('#chat').val(response);
+          $('#chat').css('color','red');
+          $('#send').hide();
         }
       });
   }
