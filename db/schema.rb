@@ -10,10 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170810175230) do
+ActiveRecord::Schema.define(version: 20170818163306) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "blacklists", force: :cascade do |t|
+    t.string "pattern"
+    t.string "regexp"
+    t.string "mode"
+  end
 
   create_table "intents", force: :cascade do |t|
     t.string  "name"

@@ -24,6 +24,17 @@ namespace :init do
       end
     end
 
+    Blacklist.delete_all
+    files = ['bad_expressions.csv']
+    files.each do |f|
+      file = File.open(f)
+      file.each do |line|
+        parts = line.split(',')
+        puts parts[0]
+        Blacklist.create(:pattern=>parts[0].downcase, :mode=>'pattern') if line.length > 0
+      end
+    end
+
     #import intents and patterns
     Intent.delete_all
     Pattern.delete_all
@@ -33,7 +44,6 @@ namespace :init do
       file.each do |line|
         if line.length > 0
           parts = line.split(',')
-          puts parts[0].length, parts[3].length
           if i = Intent.create(:name => parts[0], :response => parts[0], :pattern => parts[1])
             i.patterns << Pattern.create(:pattern=>parts[2]) if parts[2].length > 2
             i.patterns << Pattern.create(:pattern=>parts[3]) if parts[3].length > 2
