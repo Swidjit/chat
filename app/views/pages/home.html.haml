@@ -51,10 +51,17 @@
   }
 
   function send() {
-
-    $('#chatbox').prepend('<div class="phrase">' + assemblePhrase() + '</phrase>');
-    $('#comment').empty();
-    $('#send').hide();
+    $.post('/check-validity', {q:$('#chat').val()}, function(data) {
+      if(data["success"] == true) {
+        $('#chatbox').prepend('<div class="phrase">' + $('#chat').val() + '</phrase>');
+        $('#chat').val('');
+        $('#send').hide();
+      }
+      else {
+        $('#chat').css('color','red');
+        $('#send').hide();
+      }
+    });
   }
 
   function start() {
@@ -146,22 +153,8 @@
         $('#send').show();
     }
     if (e.keyCode === 13) {
-      if($('#chat').val().length > 0) {
-        $.post('/check-validity', {q:$('#chat').val()}, function(data) {
-          if(data["success"] == true) {
-            phrase = $('#chat').val().trim();
-            $('#send').show();
-            console.log('ddddd');
-          }
-          else {
-            $('#chat').css('color','red');
-            $('#send').hide();
-          }
-        });
-      }
-      else {
-        send();
-      }
+      send();
+      console.log('hey');
     }
     if (e.keyCode === 0 || e.keyCode === 32 || e.keyCode === 8) {
       checkIfValid();
@@ -170,7 +163,7 @@
   });
 
   function checkIfValid() {
-    $.post('/check-validity', {q:$('#chat').val(), statement: $('#chat').val()}, function(data) {
+    $.post('/check-validity', {q:$('#chat').val()}, function(data) {
       if(data["success"] == true) {
         phrase = $('#chat').val().trim();
         $('#send').show();
@@ -182,6 +175,7 @@
         $('#send').hide();
       }
     });
+
   }
 
 
