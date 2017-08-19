@@ -21,7 +21,7 @@ class Blacklist < ActiveRecord::Base
     regexp = regexp.gsub('^ ','.{0,60}').gsub(' ^','.{0,60}').gsub(' *','.{1,60}').gsub('* ','.{1,60}').gsub('^','.{1,60}').gsub(' [','.{0,60}[')
     regexp = regexp.gsub(' .{0,60}','.{0,60}')
     regexp = regexp.gsub(' .{1,60}','.{1,60}')
-    regexp = '.{0,60}' + regexp + '.{0,60}'
+
     self.regexp = regexp
 
     #find any sets and adjust the regex accordingly
@@ -46,10 +46,11 @@ class Blacklist < ActiveRecord::Base
     input.split(' ').each do |word|
       records = Blacklist.find_by_sql("select * from blacklists where blacklists.regexp like '%"+word+"%'")
       records.each do |p|
-        result= Regexp.new(p.regexp) =~ input
-        match = true if result==0
+        puts input.scan(/#{p.regexp}/).count
+        match = true if input.scan(/#{p.regexp}/).count > 0
       end
     end
+    puts match
     return match
   end
 

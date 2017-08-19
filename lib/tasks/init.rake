@@ -25,13 +25,14 @@ namespace :init do
     end
 
     Blacklist.delete_all
-    files = ['bad_expressions.csv']
+    files = ['blacklist.csv']
     files.each do |f|
       file = File.open(f)
       file.each do |line|
         parts = line.split(',')
-        puts parts[0]
-        Blacklist.create(:pattern=>parts[0].downcase, :mode=>'pattern') if line.length > 0
+        if line.length > 0
+          parts.length > 1 ? (Blacklist.create(:pattern=>parts[0].downcase, :mode=>'pattern')) : (Blacklist.create(:pattern=>parts[0].downcase, :mode=>'word'))
+        end
       end
     end
 

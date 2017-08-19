@@ -4,28 +4,55 @@ class Phrase < ActiveRecord::Base
   def self.check_if_valid(input)
     str = ''
     is_valid = true
-    input.split(' ').each do |word|
-      matched = true
-      str.length > 0 ? str += ' ' + word : str = word
-      phrase = Phrase.where('str LIKE ?', "%#{str}%").first
-      if phrase.present?
-
-      else
-        matched = false
-      end
-
-      if !matched
+    time = Benchmark.measure do
+      input.split(' ').each do |word|
         matched = true
-        phrase = Phrase.where('str LIKE ?', "%#{word}%").first
-        if phrase.present?
+        str.length > 0 ? str += ' ' + word : str = word
+        if Phrase.find_by_sql("select * from phrases where phrases.str like '#{word}%'").count > 0
+
+        elsif word[-1] == 's' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-2]}%'").count > 0
+
+        elsif word[-4..-1] == 'ment' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-5]}%'").count > 0
+
+        elsif word[-2..-1] == 'ly' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-3]}%'").count > 0
+
+        elsif word[-2..-1] == 'ed' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-3]}%'").count > 0
+
+        elsif word[-3..-1] == 'ing' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-4]}%' OR phrases.str like '#{word[0..-5]}%'").count > 0
+
+        elsif word[-4..-1] == 'ness' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-5]}%'").count > 0
+
+        elsif word[-4..-1] == 'less' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-5]}%'").count > 0
+
+        elsif word[-4..-1] == 'ship' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-5]}%'").count > 0
+
+        elsif word[-4..-1] == 'like' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-5]}%'").count > 0
+
+        elsif word[-4..-1] == 'ling' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-5]}%'").count > 0
+
+        elsif word[-3..-1] == 'ess' && Phrase.find_by_sql("select * from phrases where phrases.str like '%#{word[0..-4]}%'").count > 0
+
+        elsif word[-3..-1] == 'ish' && Phrase.find_by_sql("select * from phrases where phrases.str like '%#{word[0..-4]}%'").count > 0
+
 
         else
           matched = false
         end
-      end
 
-      is_valid = false if !matched
+        if !matched
+          matched = true
+          phrase = Phrase.where('str LIKE ?', "#{word}").first
+          if phrase.present?
+            puts phrase.str
+          else
+            matched = false
+          end
+        end
+
+        is_valid = false if !matched
+      end
     end
+    puts "time: #{time.real*1000}"
     return is_valid
   end
 

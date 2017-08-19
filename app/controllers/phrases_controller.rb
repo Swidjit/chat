@@ -18,7 +18,7 @@ class PhrasesController < ApplicationController
       end
     end
     str = str.strip
-    puts str
+
     if !Blacklist.is_blacklisted(str)
       is_valid = Phrase.check_if_valid(str)
       mode = 'partial'
@@ -29,7 +29,7 @@ class PhrasesController < ApplicationController
         format.json { render :json => {:success => is_valid, :mode => mode} }
       end
     else
-       respond_to do |format|
+      respond_to do |format|
         format.json { render :json => {:success => :false, :mode => mode} }
       end
     end
