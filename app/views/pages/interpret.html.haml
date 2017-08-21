@@ -1,0 +1,43 @@
+#chatbox
+%button#startBtn{:onclick => "start()"}
+  =image_tag 'mic.png'
+%button#stopBtn{:onclick => "stop()"}
+  off
+
+:javascript
+  var client;
+
+  if (client) {
+      stop();
+  }
+
+  client = new BingSpeech.RecognitionClient("f80517976240427d895b013aafe46ab9");
+
+  client.onFinalResponseReceived = function (response) {
+      response = response.replace(/[^a-zA-Z 0-9]+/g, '').toLowerCase();
+      $.post('/interpret', {q:response}, function(data) {
+        if(data["success"] == true) {
+          $('#chatbox').html(data["intent"]);
+        }
+        else {
+          $('#message').html('Invalid text: ' + response);
+        }
+      });
+  }
+
+  client.onError = function (code, requestId) {
+      console.log("<Error with request n°" + requestId + ">");
+  }
+
+
+  function start() {
+      $("#startBtn").hide();
+      $("#stopBtn").show();
+      client.startMicAndContinuousRecognition();
+  }
+
+  function stop() {
+      $("#stopBtn").hide();
+      $("#startBtn").show();
+      client.endMicAndContinuousRecognition();
+  }

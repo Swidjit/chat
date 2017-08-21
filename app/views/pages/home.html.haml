@@ -39,15 +39,6 @@
       console.log("<Error with request n°" + requestId + ">");
   }
 
-  function assemblePhrase() {
-    phrase = '';
-    $('#comment .chunk').each(function() {
-      str = $(this).text();
-      phrase += str + ' ';
-    });
-    return phrase.trim();
-  }
-
   function send() {
     $.post('/check-validity', {q:$('#chat').val()}, function(data) {
       if(data["success"] == true) {

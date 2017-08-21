@@ -1,22 +1,13 @@
 namespace :init do
   task :seed => :environment do
     WordSet.delete_all
-    WordSet.create(:keyword=>'are', :words=>['are','is','am'])
-    WordSet.create(:keyword=>'was', :words=>['was','were'])
-    WordSet.create(:keyword=>'do', :words=>['do','does'])
-    WordSet.create(:keyword=>'go', :words=>['go','goes'])
-    WordSet.create(:keyword=>'you', :words=>['you','he','she','they','we','I'])
-
-
-    #seed intent
-    a = Intent.create(:name=>'test',:response=>'yes',:pattern=>'this ^ test', :grouping_id => 1)
-    a.patterns << Pattern.new(:pattern=>'how old ^ you')
+    WordSet.create(:keyword=>'pronoun', :words => ['me','you','him','her','them'])
 
   end
 
   task :import => :environment do
     Phrase.delete_all
-    files = ['phrases.csv','nouns.csv','core.csv','adjectives.csv','verbs.csv']
+    files = ['nouns.csv','core.csv','adjectives.csv','verbs.csv','abbreviations.csv']
     files.each do |f|
       file = File.open(f)
       file.each do |line|
