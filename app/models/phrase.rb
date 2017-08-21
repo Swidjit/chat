@@ -8,31 +8,31 @@ class Phrase < ActiveRecord::Base
       input.split(' ').each do |word|
         matched = true
         str.length > 0 ? str += ' ' + word : str = word
-        if Phrase.find_by_sql("select * from phrases where phrases.str like '#{word}%'").count > 0
+        if Phrase.find_by_sql("select * from phrases where phrases.str like '#{word}'").count > 0
 
-        elsif word[-1] == 's' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-2]}%'").count > 0
+        elsif word.length >= 4 && word[-1] == 's' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-2]}'").count > 0
 
-        elsif word[-4..-1] == 'ment' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-5]}%'").count > 0
+        elsif word.length >= 7 && word[-4..-1] == 'ment' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-5]}'").count > 0
 
-        elsif word[-2..-1] == 'ly' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-3]}%'").count > 0
+        elsif word.length >= 5 && word[-2..-1] == 'ly' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-3]}'").count > 0
 
-        elsif word[-2..-1] == 'ed' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-3]}%'").count > 0
+        elsif word.length >= 5 && word[-2..-1] == 'ed' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-3]}'").count > 0
 
-        elsif word[-3..-1] == 'ing' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-4]}%' OR phrases.str like '#{word[0..-5]}%'").count > 0
+        elsif word.length >= 6 && word[-3..-1] == 'ing' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-4]}' OR phrases.str like '#{word[0..-5]}'").count > 0
 
-        elsif word[-4..-1] == 'ness' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-5]}%'").count > 0
+        elsif word.length >= 7 && word[-4..-1] == 'ness' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-5]}'").count > 0
 
-        elsif word[-4..-1] == 'less' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-5]}%'").count > 0
+        elsif word.length >= 7 && word[-4..-1] == 'less' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-5]}'").count > 0
 
-        elsif word[-4..-1] == 'ship' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-5]}%'").count > 0
+        elsif word.length >= 7 && word[-4..-1] == 'ship' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-5]}'").count > 0
 
-        elsif word[-4..-1] == 'like' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-5]}%'").count > 0
+        elsif word.length >= 7 && word[-4..-1] == 'like' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-5]}'").count > 0
 
-        elsif word[-4..-1] == 'ling' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-5]}%'").count > 0
+        elsif word.length >= 7 && word[-4..-1] == 'ling' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-5]}'").count > 0
 
-        elsif word[-3..-1] == 'ess' && Phrase.find_by_sql("select * from phrases where phrases.str like '%#{word[0..-4]}%'").count > 0
+        elsif word.length >= 6 && word[-3..-1] == 'ess' && Phrase.find_by_sql("select * from phrases where phrases.str like '%#{word[0..-4]}'").count > 0
 
-        elsif word[-3..-1] == 'ish' && Phrase.find_by_sql("select * from phrases where phrases.str like '%#{word[0..-4]}%'").count > 0
+        elsif word.length >= 6 && word[-3..-1] == 'ish' && Phrase.find_by_sql("select * from phrases where phrases.str like '%#{word[0..-4]}'").count > 0
 
 
         else
