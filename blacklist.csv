@@ -80,6 +80,8 @@ EXPRESSION,REPLACEMENT,FORBIDDEN PATTERNS,ALLOWABLE PATTERNS
 ^ jump ^ [pronoun] ^,,,
 ^ better ^ [pronoun] ^,,,
 ^ get you ^,,,
+^ put an end ^,,,
+^ push/pull [pronoun] ^,,,
 ass,,,
 butt,,,
 but,,,
