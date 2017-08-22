@@ -1,7 +1,7 @@
 namespace :init do
   task :seed => :environment do
     WordSet.delete_all
-    WordSet.create(:keyword=>'pronoun', :words => ['me','you','him','her','them'])
+    WordSet.create(:keyword=>'pronoun', :words => ['me','you','him','her','them', 'u'])
 
   end
 
