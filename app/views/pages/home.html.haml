@@ -46,7 +46,7 @@
   function send() {
     $.post('/check-validity', {q:$('#chat').val().toLowerCase(), mode:'send'}, function(data) {
       if(data["success"] == true) {
-        $('#logs').append('<div class="log">' + $('#chat').val() + '</log>');
+        $('#logs').append('<div class="log">' + $('#chat').val().toLowerCase(), + '</log>');
         $('#chat').val('');
         $('#send').hide();
         $('#report').hide();
