@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   post '/interpret' => 'intents#interpret'
   post '/recommend' => 'intents#recommend'
   post '/recommend2' => 'intents#recommend2'
+  post '/log' => 'logs#create'
 
   get 'chat' => 'pages#chat'
 end

@@ -8,7 +8,10 @@ class Phrase < ActiveRecord::Base
       input.split(' ').each do |word|
         matched = true
         str.length > 0 ? str += ' ' + word : str = word
-        if Phrase.find_by_sql("select * from phrases where phrases.str like '#{word}'").count > 0
+        puts word[0]
+        if ['a','i','u'].include? word[0] && str.length == 1
+
+        elsif Phrase.find_by_sql("select * from phrases where phrases.str like '#{word}'").count > 0
 
         elsif word.length >= 4 && word[-1] == 's' && Phrase.find_by_sql("select * from phrases where phrases.str like '#{word[0..-2]}'").count > 0
 
@@ -37,16 +40,6 @@ class Phrase < ActiveRecord::Base
 
         else
           matched = false
-        end
-
-        if !matched
-          matched = true
-          phrase = Phrase.where('str LIKE ?', "#{word}").first
-          if phrase.present?
-            puts phrase.str
-          else
-            matched = false
-          end
         end
 
         is_valid = false if !matched

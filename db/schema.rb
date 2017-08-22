@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170818163306) do
+ActiveRecord::Schema.define(version: 20170821191952) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,11 @@ ActiveRecord::Schema.define(version: 20170818163306) do
     t.string  "pattern"
     t.integer "grouping_id"
     t.index ["grouping_id"], name: "index_intents_on_grouping_id", using: :btree
+  end
+
+  create_table "logs", force: :cascade do |t|
+    t.string "input"
+    t.string "mode"
   end
 
   create_table "patterns", force: :cascade do |t|

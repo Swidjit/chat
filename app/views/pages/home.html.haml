@@ -1,4 +1,5 @@
-#chatbox
+#logs
+  =render Log.where(:mode=>'sent').all
 %button#startBtn{:onclick => "start()"}
   =image_tag 'mic.png'
 %button#stopBtn{:onclick => "stop()"}
@@ -8,6 +9,7 @@
 %br
 #message
 %button#send{:onclick => "send()"} send
+%button#report{:onclick => "report()"} report
 
 
 :javascript
@@ -40,16 +42,25 @@
   }
 
   function send() {
-    $.post('/check-validity', {q:$('#chat').val()}, function(data) {
+    $.post('/check-validity', {q:$('#chat').val().toLowerCase(), mode:'send'}, function(data) {
       if(data["success"] == true) {
-        $('#chatbox').prepend('<div class="phrase">' + $('#chat').val() + '</phrase>');
+        $('#logs').append('<div class="log">' + $('#chat').val() + '</log>');
         $('#chat').val('');
         $('#send').hide();
+        $('#report').hide();
       }
       else {
         $('#chat').css('color','red');
         $('#send').hide();
+        $('#report').show();
       }
+    });
+  }
+
+  function report() {
+    $.post('/log', {input:$('#chat').val().toLowerCase(), mode:'report'}, function(data) {
+      $('#message').html('thanks for reporting');
+      $('#report').hide();
     });
   }
 
@@ -116,14 +127,17 @@
     });
 
     $(document).on('click','.choice',function() {
-
-      $('#comment').append('<div class="chunk">'+ $(this).text().trim() +'</chunk>');
-      $('#chat').val('');
-      $('#chat').focus();
-      $('#chat').css('color','green');
-      $('#search-result').empty();
-      $('#send').show();
+      console.log('hey');
+        text = $(this).text();
+        $('#chat').val(phrase.trim() + ' ' + text.trim() + ' ');
+        phrase = $('#chat').val().trim();
+        $('#send').show();
+        $('#chat').css('color','green');
+        $('#search-result').empty();
+        $('#send').show();
+        $('#chat').focus();
     });
+
     $(document).on('click','.chunk',function() {
 
       $(this).remove();
@@ -140,6 +154,7 @@
         $('#chat').css('color','green');
         $('#search-result').empty();
         $('#send').show();
+        $('#chat').focus();
     }
     if (e.keyCode === 13) {
       send();
@@ -152,16 +167,18 @@
   });
 
   function checkIfValid() {
-    $.post('/check-validity', {q:$('#chat').val()}, function(data) {
+    $.post('/check-validity', {q:$('#chat').val().toLowerCase()}, function(data) {
       if(data["success"] == true) {
         phrase = $('#chat').val().trim();
         $('#send').show();
         $('#chat').css('color','green');
         $("#search-result").html("");
+        $('#report').hide();
       }
       else {
         $('#chat').css('color','red');
         $('#send').hide();
+        $('#report').show();
       }
     });
 

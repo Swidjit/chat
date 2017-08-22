@@ -23,6 +23,9 @@ class PhrasesController < ApplicationController
       is_valid = Phrase.check_if_valid(str)
       mode = 'partial'
       if is_valid
+        if params[:mode] == 'send'
+          Log.create(:input=>params[:q],:mode=>'sent')
+        end
         mode = Phrase.check_if_exact(str)
       end
       respond_to do |format|

@@ -46,11 +46,9 @@ class Blacklist < ActiveRecord::Base
     input.split(' ').each do |word|
       records = Blacklist.find_by_sql("select * from blacklists where blacklists.regexp like '%"+word+"%'")
       records.each do |p|
-        puts input.scan(/#{p.regexp}/).count
         match = true if input.scan(/#{p.regexp}/).count > 0
       end
     end
-    puts match
     return match
   end
 
