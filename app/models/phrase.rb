@@ -8,8 +8,7 @@ class Phrase < ActiveRecord::Base
       input.split(' ').each do |word|
         matched = true
         str.length > 0 ? str += ' ' + word : str = word
-        puts word[0]
-        if ['a','i','u'].include? word[0] && str.length == 1
+        if ['a','i','u'].include?(word[0]) && word.length == 1
 
         elsif Phrase.find_by_sql("select * from phrases where phrases.str like '#{word}'").count > 0
 
@@ -41,7 +40,6 @@ class Phrase < ActiveRecord::Base
         else
           matched = false
         end
-
         is_valid = false if !matched
       end
     end
@@ -52,6 +50,7 @@ class Phrase < ActiveRecord::Base
   def self.check_if_exact(input)
     p = Phrase.find_by_str(input.strip)
     puts input.strip
+    puts 'lalal'
     if p.present?
       return 'exact'
     else

@@ -1,15 +1,17 @@
+%h3 Successful Transmissions
 #logs
   =render Log.where(:mode=>'sent').all
+%hr
 %button#startBtn{:onclick => "start()"}
   =image_tag 'mic.png'
 %button#stopBtn{:onclick => "stop()"}
   off
-%input#chat{:type=>'text', :placeholder => 'talk'}
+%input#chat{:type=>'text', :placeholder => 'do your worst'}
 #search-result
 %br
 #message
 %button#send{:onclick => "send()"} send
-%button#report{:onclick => "report()"} report
+%button#report{:onclick => "report()"} this seems ok, but I can't submit it
 
 
 :javascript
