@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170821191952) do
+ActiveRecord::Schema.define(version: 20170823124246) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,11 @@ ActiveRecord::Schema.define(version: 20170821191952) do
     t.string  "pattern"
     t.integer "age"
     t.integer "game_id"
+  end
+
+  create_table "substitutions", force: :cascade do |t|
+    t.string "word"
+    t.text   "synonyms", array: true
   end
 
   create_table "word_sets", force: :cascade do |t|

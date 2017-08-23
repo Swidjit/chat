@@ -3,6 +3,12 @@ namespace :init do
     WordSet.delete_all
     WordSet.create(:keyword=>'pronoun', :words => ['me','you','him','her','them', 'u'])
 
+
+    Substitution.delete_all
+    Substitution.create(:word=>'but',:synonyms=>['although'])
+    Substitution.create(:word=>'hard',:synonyms=>['difficult'])
+    Substitution.create(:word=>'easy',:synonyms=>['simple'])
+    Substitution.create(:word=>'grass',:synonyms=>['lawn'])
   end
 
   task :import => :environment do

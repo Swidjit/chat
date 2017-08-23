@@ -45,6 +45,7 @@
 
   function send() {
     $.post('/check-validity', {q:$('#chat').val().toLowerCase(), mode:'send'}, function(data) {
+
       if(data["success"] == true) {
         $('#logs').append('<div class="log">' + $('#chat').val().toLowerCase(), + '</log>');
         $('#chat').val('');
@@ -171,7 +172,14 @@
 
   function checkIfValid() {
     $.post('/check-validity', {q:$('#chat').val().toLowerCase()}, function(data) {
+
       if(data["success"] == true) {
+        subs = jQuery.makeArray(data["changes"]);
+        $.each(subs, function(k,change) {
+          console.log(change);
+          $('#chat').val($('#chat').val().replace(change["word"],change["synonyms"]));
+
+        });
         phrase = $('#chat').val().trim();
         $('#send').show();
         $('#chat').css('color','green');
