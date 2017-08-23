@@ -1,0 +1,132 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+
+
+ */
+
+ #chatbox {
+   margin: 0px 20px;
+   border: 1px solid gray;
+   height: 300px;
+   vertical-align:bottom;
+
+ }
+
+
+ .hidden {
+     display: none;
+ }
+ .choice,.option {
+   padding: 0px 5px;
+   margin-top: 5px;
+   display: inline;
+ }
+ .choice-count {
+   display: inline;
+ }
+ .choice:hover, .option:hover {
+   background: blue;
+   color: white;
+ }
+
+ .chunk {
+   margin: 3px 1px;
+   padding: 4px 2px;
+   display: inline;
+   background: #eee;
+ }
+
+
+ #chat {
+ 	width: 100%;
+   display:block;
+   margin-top: 10px;
+   margin-left: 5px;
+ }
+
+
+ #stopBtn {
+   display:none;
+ }
+ #stopBtn, #startBtn {
+   margin-top: 10px;
+   position: absolute;
+   top: 310px;
+   right: 20px;
+ }
+ #message {
+   color:red;
+ }
+ input#chat, input#chat:focus {
+   border: none;
+   outline: none;
+   font-size: 1.5em;
+ }
+ #search-result {
+ 	display:block;
+   font-size: 1.5em;
+   text-align: left;
+   width: 300px;
+   margin-right: 65px;
+   top: 0px;
+   clear:both;
+
+ }
+
+ #autocomplete-options {
+	.option {
+		display: block;
+	}
+ }
+
+ #logs {
+ 	margin: 8px 15px;
+ 	color: blue;
+ 	font-size: 1.1em;
+ 	line-height: 1.1em;
+ }
+
+ #send {
+   display: none;
+   background-color: green;
+   color: white;
+   padding: 4px 6px;
+   text-align: right;
+   font-weight: 600;
+   font-size: 1.5em;
+ }
+ #report {
+   display: none;
+   background-color:red;
+   color: white;
+   padding: 4px 6px;
+   text-align: right;
+   font-weight: 600;
+   font-size: 1.5em;
+ }
+
+ .chunk:hover {
+   border: 1px solid purple;
+   cursor: pointer;
+ }
+
+ .option-title, .option-count {
+ 	display: inline;
+ }
+ .option-count {
+ 	margin-left: 4px;
+ }
+
+.option {
+	display: block;
+}
