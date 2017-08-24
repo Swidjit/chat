@@ -2,6 +2,17 @@ development:
   adapter: postgresql
   encoding: unicode
   database: chatter_dev
+  port: 5432
+  pool: 5
+  username: postgres
+  password: postgres
+  min_messages: warning
+  host: localhost
+
+production:
+  adapter: postgresql
+  encoding: unicode
+  database: chatter_dev
   pool: 5
   username: acolket
   password: BNAZ0he7leqKfAoe
