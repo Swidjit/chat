@@ -1,7 +1,8 @@
 namespace :init do
   task :seed => :environment do
     WordSet.delete_all
-    WordSet.create(:keyword=>'pronoun', :words => ['me','you','him','her','them', 'u'])
+    WordSet.create(:keyword=>'object-pronoun', :words => ['me','you','him','her','them','u'])
+    WordSet.create(:keyword=>'possessive-pronoun', :words => ['mine','yours','his','her','their','our'])
 
 
     Substitution.delete_all
