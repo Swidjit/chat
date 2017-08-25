@@ -16,7 +16,7 @@ namespace :experiments do
 
   task :regex => :environment do
 
-    p = 'i like eat* {2} later than ([possessive-pronoun]|[object-pronoun]) ?stupid brother'
+    p = '(polish* [object-pronoun] off)|(rub* [object-pronoun] off)'
 
     chunks = p.split(' ')
     chunks.each do |ch|
@@ -32,10 +32,14 @@ namespace :experiments do
         sets = ch.gsub(/(\(|\))/,'').split('|')
         puts sets
         sets.each do |s|
-          puts s[1..-2]
-          set = WordSet.find_by_keyword(s[1..-2])
-          str = '(' + set.words.join('|') + ')'
-          p = p.gsub(s,str)
+
+          check= Regexp.new(/\[((?!\s|\/).)*\]/) =~ s
+          if check==0
+            puts s[1..-2]            
+            set = WordSet.find_by_keyword(s[1..-2])
+            str = '(' + set.words.join('|') + ')'
+            p = p.gsub(s,str)
+          end
         end
       end
     end

@@ -1,9 +1,12 @@
 namespace :init do
   task :seed => :environment do
     WordSet.delete_all
-    WordSet.create(:keyword=>'object-pronoun', :words => ['me','you','him','her','them','u'])
-    WordSet.create(:keyword=>'possessive-pronoun', :words => ['mine','yours','his','her','their','our'])
+    WordSet.create(:keyword=>'object_pronoun', :words => ['me','you','him','her','them','u'])
+    WordSet.create(:keyword=>'possessive_pronoun', :words => ['mine','yours','his','her','their','our'])
 
+    WordSet.create(:keyword=>'ejaculate', :words => ['finish','come','climax','explode','release','complete'])
+    WordSet.create(:keyword=>'injure', :words => ['step on','hurt','pound','smack','slap','squash','squish','smash','smack','nail'])
+    WordSet.create(:keyword=>'kill', :words => ['end','terminate','extinguish','waste','zap','finish','off'])
 
     Substitution.delete_all
     Substitution.create(:word=>'but',:synonyms=>['although'])

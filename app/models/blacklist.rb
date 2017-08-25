@@ -16,29 +16,38 @@ class Blacklist < ActiveRecord::Base
     #now, lets use pipes instead of slashes for regexp syntax
     regexp = regexp.gsub('/',"|")
 
-
-    #remove spaces around wilcards so 'come here ^ now' -> 'come here^now'  ... could be more efficient with regexp gsub
-    regexp = regexp.gsub('^ ','.{0,60}').gsub(' ^','.{0,60}').gsub(' *','.{1,60}').gsub('* ','.{1,60}').gsub('^','.{1,60}').gsub(' [','.{0,60}[')
-    regexp = regexp.gsub(' .{0,60}','.{0,60}')
-    regexp = regexp.gsub(' .{1,60}','.{1,60}')
-
-    self.regexp = regexp
-
-    #find any sets and adjust the regex accordingly
-    chunks = self.pattern.split(' ')
+    chunks = regexp.split(' ')
     chunks.each do |ch|
       #look for set syntax ... and make sure there is no space in the match or else it could be two sets eg 'do you [like] [sports]'
       #may need to change if we want to allow sets names with more than one word
-      result= Regexp.new(/\[((?!\s).)*\]/) =~ ch
-      if(result==0)
-        set = WordSet.find_by_keyword(ch[1..-2])
+      #match a range of words ^(?:\w+\s){0,3}(?:\w+)$
+      ch.scan(/(\[\w{0,60}\])/) do |match|
+        set = WordSet.find_by_keyword(match[0][1..-2])
         str = '(' + set.words.join('|') + ')'
-        regexp = self.regexp.gsub(ch,str)
-        self.regexp = regexp
+        regexp = regexp.gsub(match[0],str)
       end
+
     end
 
-    self.save
+    #let's replace all underscore with spaces now that we have done our chunking
+    regexp = regexp.gsub(/_/,' ')
+    #allow for optional words, eg 'this ?strange thing -> 'this thing' or 'this strange thing' but not 'this odd thing'
+    matches = regexp.scan(/\s\?\w+\s/)
+    matches.each do |n|
+      regexp = regexp.gsub(n,"(\\s#{n[2..-2]})? ")
+    end
+    #allow for wildcard endings eg 'scien*' -> 'science','scientist','scientific'
+    regexp = regexp.gsub(/\*\s/,'(\w+)?\s')
+    #allow for infinite words betwen patterns, eg 'put ^ away ^' -> 'put away' or 'put that ridiculous thing away right now'
+    regexp = regexp.gsub(/(\s)?\^(\s)?/,'\s.{0,}')
+    #allow for finite number of words to appear between patterns, eg 'I {1} put' -> 'I put' or 'I last put', but not 'I most recently put'
+    regexp = regexp.gsub(/\?\{\d\}\s/,"")
+    matches = regexp.scan(/\{\d\}/)
+    matches.each do |n|
+      regexp = regexp.gsub(n,"(?:\\w+\\s){0,#{n[1]}}(?:\\w+)")
+    end
+    self.update_attribute(:regexp, regexp)
+    puts regexp
   end
 
   def self.is_blacklisted(input)
