@@ -38,14 +38,18 @@ class Blacklist < ActiveRecord::Base
     end
     #allow for wildcard endings eg 'scien*' -> 'science','scientist','scientific'
     regexp = regexp.gsub(/\*\s/,'(\w+)?\s')
+    regexp = regexp.gsub(/\*/,'(\w+)?')
     #allow for infinite words betwen patterns, eg 'put ^ away ^' -> 'put away' or 'put that ridiculous thing away right now'
     regexp = regexp.gsub(/(\s)?\^(\s)?/,'\s.{0,}')
     #allow for finite number of words to appear between patterns, eg 'I {1} put' -> 'I put' or 'I last put', but not 'I most recently put'
     regexp = regexp.gsub(/\?\{\d\}\s/,"")
-    matches = regexp.scan(/\{\d\}/)
+    matches = regexp.scan(/\{\d\}\s/)
     matches.each do |n|
-      regexp = regexp.gsub(n,"(?:\\w+\\s){0,#{n[1]}}(?:\\w+)")
+      regexp = regexp.gsub(n,"(?:\\w+\\s){0,#{n[1]}}")
     end
+    #add capturing group around entire expression
+    regexp = '(' + regexp + ')'
+
     self.update_attribute(:regexp, regexp)
     puts regexp
   end
@@ -55,7 +59,11 @@ class Blacklist < ActiveRecord::Base
     input.split(' ').each do |word|
       records = Blacklist.find_by_sql("select * from blacklists where blacklists.regexp like '%"+word+"%'")
       records.each do |p|
-        match = true if input.scan(/#{p.regexp}/).count > 0
+        input.scan(/#{p.regexp}/) do |hit|
+          puts 'het'
+          match = true
+          puts p.regexp
+        end
       end
     end
     return match

@@ -1,12 +1,23 @@
 namespace :init do
   task :seed => :environment do
     WordSet.delete_all
-    WordSet.create(:keyword=>'object_pronoun', :words => ['me','you','him','her','them','u'])
-    WordSet.create(:keyword=>'possessive_pronoun', :words => ['mine','yours','his','her','their','our'])
+    WordSet.create(:keyword=>'i', :words => ['he', 'she', 'they', 'you'])
+    WordSet.create(:keyword=>'you', :words => ['me','him','her','them','u'])
+    WordSet.create(:keyword=>'your', :words => ['my','yours','his','her','their','our'])
 
     WordSet.create(:keyword=>'ejaculate', :words => ['finish','come','climax','explode','release','complete'])
-    WordSet.create(:keyword=>'injure', :words => ['step on','hurt','pound','smack','slap','squash','squish','smash','smack','nail'])
+    WordSet.create(:keyword=>'injure', :words => ['mess','step on','hurt','pound','smack','slap','squash','squish','smash','smack','nail'])
     WordSet.create(:keyword=>'kill', :words => ['end','terminate','extinguish','waste','zap','finish','off'])
+    WordSet.create(:keyword=>'stupid', :words => ['dense','slow','dull','thick'])
+    WordSet.create(:keyword=>'touch', :words => ['put','press','hold','push','tap','pat','feel','brush','handle','poke'])
+    WordSet.create(:keyword=>'push', :words => ['shove','press','drive','knock','force'])
+    WordSet.create(:keyword=>'insert', :words => ['put','place','push','slide','load','fit','pop','stick','install'])
+    WordSet.create(:keyword=>'screw', :words => ['sleep','slept','do','did','lay','laid','bed','couple','nail','take','took'])
+    WordSet.create(:keyword=>'grab', :words => ['pull','clasp','hold','take','hook','catch','seize','grip'])
+    WordSet.create(:keyword=>'own', :words => ['control','possess','have'])
+    WordSet.create(:keyword=>'desire', :words => ['want','need','wish','hope','like','prefer','enjoy'])
+    WordSet.create(:keyword=>'pull', :words => ['drag','rip','strecth'])
+    WordSet.create(:keyword=>'break', :words => ['split']
 
     Substitution.delete_all
     Substitution.create(:word=>'but',:synonyms=>['although'])

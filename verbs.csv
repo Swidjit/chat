@@ -8,18 +8,35 @@ put
 place
 grab
 pick
-is
-am
-was
-are
-were
-do
-did
-does
-go
-going
-went
+"is, was, are, were, am"
+"do,did,does"
+"go,going,goes,went"
 let
-make
-be
-goes
+"make,made,making"
+"be,been,being"
+"have,has,had"
+"say, said"
+"get,got,gotten"
+"know, knew, known"
+"take,took,taken"
+"see,saw,seen"
+"come,came"
+"use,used"
+"tell,told"
+"try,tried"
+"become, became"
+meant
+"keep, kept"
+"begin,began,begun"
+"show,shown"
+"hear,heard"
+"run,ran"
+"bring,brought"
+"write, wrote"
+"grow,grew.grown"
+"win,won"
+"send,sent"
+"build,built"
+"chose, chosen, choose"
+"draw,drew"
+"catch,caught"
