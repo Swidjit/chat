@@ -17,7 +17,7 @@ namespace :init do
     WordSet.create(:keyword=>'own', :words => ['control','possess','have'])
     WordSet.create(:keyword=>'desire', :words => ['want','need','wish','hope','like','prefer','enjoy'])
     WordSet.create(:keyword=>'pull', :words => ['drag','rip','strecth'])
-    WordSet.create(:keyword=>'break', :words => ['split']
+    WordSet.create(:keyword=>'break', :words => ['split'])
 
     Substitution.delete_all
     Substitution.create(:word=>'but',:synonyms=>['although'])
@@ -32,7 +32,10 @@ namespace :init do
     files.each do |f|
       file = File.open(f)
       file.each do |line|
-        Phrase.create(:str=>line.downcase.gsub(/[^0-9a-z ]/i, '')) if line.length > 0
+        line=line.gsub(/"\s/,'')
+        line.split(',').each do |word|
+          Phrase.create(:str=>word.downcase.gsub(/[^0-9a-z ]/i, '')) if word.length > 0
+        end
       end
     end
 

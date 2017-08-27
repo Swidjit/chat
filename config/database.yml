@@ -4,8 +4,8 @@ development:
   database: chatter_dev
   port: 5432
   pool: 5
-  username: postgres
-  password: postgres
+  username: swidjit
+  password: password
   min_messages: warning
   host: localhost
 
