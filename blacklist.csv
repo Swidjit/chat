@@ -103,7 +103,8 @@ operat*/feed* on ([you]|[your])
 leave/left [you] {1} broke*/[injure]
 concentration camp*
 ([you]|[your]) have/is/are/has {2} bottom
-([you]|[your]) face
+([you]|[your]) ^ face
+((or else)|(know what is good for))
 butt
 but
 dick

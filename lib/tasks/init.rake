@@ -1,8 +1,8 @@
 namespace :init do
   task :seed => :environment do
     WordSet.delete_all
-    WordSet.create(:keyword=>'i', :words => ['he', 'she', 'they', 'you', 'nobody', 'anybody', 'everybody', 'anyone'])
-    WordSet.create(:keyword=>'you', :words => ['me','him','her','them','u'])
+    WordSet.create(:keyword=>'i', :words => ['he', 'she', 'they', 'you', 'u', 'nobody', 'anybody', 'everybody', 'anyone'])
+    WordSet.create(:keyword=>'you', :words => ['me','him','her','them','u', 'nobody', 'anybody', 'everybody', 'anyone'])
     WordSet.create(:keyword=>'your', :words => ['my','his','her','their','our'])
     WordSet.create(:keyword=>'yours', :words => ['mine','yours','his','her','theirs','ours'])
 
