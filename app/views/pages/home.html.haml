@@ -177,7 +177,7 @@
         subs = jQuery.makeArray(data["changes"]);
         $.each(subs, function(k,change) {
           console.log(change);
-          $('#chat').val($('#chat').val().replace(change["word"],change["synonyms"]));
+          //$('#chat').val($('#chat').val().replace(change["word"],change["synonyms"]));
 
         });
         phrase = $('#chat').val().trim();
@@ -194,5 +194,3 @@
     });
 
   }
-
-

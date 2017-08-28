@@ -9,7 +9,7 @@ place
 grab
 pick
 "is,was,are,were,am"
-"do,did,does"
+"do,did,does,done"
 "go,going,goes,went"
 let
 "make,made,making"
@@ -20,7 +20,7 @@ let
 "know,knew,known"
 "take,took,taken"
 "see,saw,seen"
-"come,came"
+"come,came,coming"
 "use,used"
 "tell,told"
 "try,tried"
@@ -32,7 +32,7 @@ meant
 "hear,heard"
 "run,ran"
 "bring,brought"
-"write,wrote"
+"write, wrote"
 "grow,grew,grown"
 "win,won"
 "send,sent"
@@ -40,3 +40,5 @@ meant
 "chose,chosen,choose"
 "draw,drew"
 "catch,caught"
+"fall,fell"
+"dance,dancing"

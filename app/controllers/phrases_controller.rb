@@ -27,8 +27,6 @@ class PhrasesController < ApplicationController
         changes.push({:word => s.word, :synonyms=>s.synonyms[0]})
       end
     end
-    puts str
-    puts changes
     str = str.strip
     if !Blacklist.is_blacklisted(str)
       is_valid = Phrase.check_if_valid(str)
