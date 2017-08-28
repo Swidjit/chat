@@ -37,7 +37,7 @@ class Blacklist < ActiveRecord::Base
       regexp = regexp.gsub(n,"(\\s#{n[2..-2]})? ")
     end
     #allow for wildcard endings eg 'scien*' -> 'science','scientist','scientific'
-    regexp = regexp.gsub(/\*\s/,'(\w+)?\s')
+    regexp = regexp.gsub(/\*\s/,'(\w+)?')
     regexp = regexp.gsub(/\*/,'(\w+)?')
     #allow for infinite words betwen patterns, eg 'put ^ away ^' -> 'put away' or 'put that ridiculous thing away right now'
     regexp = regexp.gsub(/(\s)?\^(\s)?/,'\s.{0,}')
