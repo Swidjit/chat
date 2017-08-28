@@ -48,6 +48,8 @@ class Blacklist < ActiveRecord::Base
       regexp = regexp.gsub(n,"(?:\\w+\\s){0,#{n[1]}}")
     end
     #add capturing group around entire expression
+    regexp = regexp.gsub(/\r\n?|\n/,'')
+
     regexp = '(' + regexp + ')'
 
     self.update_attribute(:regexp, regexp)
@@ -60,7 +62,7 @@ class Blacklist < ActiveRecord::Base
       records = Blacklist.find_by_sql("select * from blacklists where blacklists.regexp like '%"+word+"%'")
       records.each do |p|
         input.scan(/#{p.regexp}/) do |hit|
-          puts 'het'
+          puts 'blacklisted'
           match = true
           puts p.regexp
         end
