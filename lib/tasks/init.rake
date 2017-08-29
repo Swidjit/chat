@@ -1,20 +1,29 @@
 namespace :init do
   task :seed => :environment do
     WordSet.delete_all
-    WordSet.create(:keyword=>'i', :words => ['he', 'she', 'they', 'you', 'u', 'nobody', 'anybody', 'everybody', 'anyone'])
-    WordSet.create(:keyword=>'you', :words => ['me','him','her','them','u', 'nobody', 'anybody', 'everybody', 'anyone'])
+    WordSet.create(:keyword=>'i', :words => ['he', 'she', 'they', 'you', 'u', 'nobody', 'anybody', 'everyone', 'everybody', 'anyone'])
+    WordSet.create(:keyword=>'you', :words => ['me','him','her','them','u', 'nobody', 'anybody', 'everybody', 'everyone', 'anyone'])
     WordSet.create(:keyword=>'your', :words => ['my','his','her','their','our'])
     WordSet.create(:keyword=>'yours', :words => ['mine','yours','his','her','theirs','ours'])
 
 
     WordSet.create(:keyword=>'ejaculate', :words => ['finish*','come','came','coming','climax*','explod*','releas*','complet*'])
-    WordSet.create(:keyword=>'injure', :words => ['jump','drop','deck','sit','sat','split*','slic*','mess*','step*','hurt*','pound*','smack*','slap*','squash*','squish*','smash*','nail*','tear*','tore','torn'])
+    WordSet.create(:keyword=>'injure', :words => ['get','got','jump','drop','deck','sit','sat','split*','slic*','mess*','step*','hurt*','pound*','smack*','slap*','squash*','squish*','smash*','nail*','tear*','tore','torn'])
     WordSet.create(:keyword=>'kill', :words => ['rid','end*','terminat*','extinguish*','wast*','zap*','finish*','off*'])
-    WordSet.create(:keyword=>'stupid', :words => ['dense','slow','dull','thick'])
+    WordSet.create(:keyword=>'die', :words => ['depart','breathless','offed','breath*'])
+    WordSet.create(:keyword=>'fail', :words => ['flop'])
+    WordSet.create(:keyword=>'size', :words => ['small*','big*','siz*','large'])
+    WordSet.create(:keyword=>'command', :words => ['tell*','told','say*','saying','order'])
+
+
+    WordSet.create(:keyword=>'stupid', :words => ['dense','slow','dull','thick','basic'])
+    WordSet.create(:keyword=>'lame', :words => ['bad','slow','dull','thick'])
+    WordSet.create(:keyword=>'smart', :words => ['quick','sharp','intelligent','bright'])
+    WordSet.create(:keyword=>'wanted', :words => ['cool','seen','appreciated','liked','loved'])
     WordSet.create(:keyword=>'touch', :words => ['put*','press*','hold*','push*','tap*','pat*','feel*','felt','brush*','handl*','pok*'])
     WordSet.create(:keyword=>'push', :words => ['shov*','press*','driv*','knock*','forc*'])
-    WordSet.create(:keyword=>'insert', :words => ['put*','plac*','push*','slid*','load*','fit*','pop*','stick*','install*'])
-    WordSet.create(:keyword=>'screw', :words => ['sit','sat','sleep*','slept','do*','did','lay','laid','bed','couple','nail','take','took','tear*','tore','torn'])
+    WordSet.create(:keyword=>'insert', :words => ['put*','plac*','push*','slid*','load*','fit*','pop*','stick*','stuck','install*'])
+    WordSet.create(:keyword=>'screw', :words => ['sit','sat','sleep*','slept','lay','laid','bed','couple','nail','take','took','tear*','tore','torn'])
     WordSet.create(:keyword=>'grab', :words => ['pull*','clasp*','hold*','tak*','hook*','catch*','seiz*','grip*'])
     WordSet.create(:keyword=>'own', :words => ['control*','possess*','hav*','rul*'])
     WordSet.create(:keyword=>'desire', :words => ['want*','need*','wish*','hop*','lik*','prefer*','enjoy*'])
@@ -30,6 +39,12 @@ namespace :init do
     Substitution.create(:word=>'grass',:synonyms=>['lawn'])
     Substitution.create(:word=>'thing',:synonyms=>['object'])
     Substitution.create(:word=>'sorry',:synonyms=>['oops'])
+    Substitution.create(:word=>'bottom',:synonyms=>['floor'])
+    Substitution.create(:word=>'did you',:synonyms=>['were you'])
+    Substitution.create(:word=>'do you',:synonyms=>['does anyone'])
+
+    #Substitution.create(:word=>'stuck',:synonyms=>['trapped'])
+
   end
 
   task :import => :environment do

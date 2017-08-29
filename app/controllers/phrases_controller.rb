@@ -19,18 +19,20 @@ class PhrasesController < ApplicationController
         str = str + ' ' + word
       end
     end
-    puts str.length
+    str = str.strip
     puts str
     changes = []
     #substritute for banned but necessary words
     Substitution.all.each do |s|
-      if str.scan(/\s#{s.word}\s/).present?
+      if str.scan(/(\s|\b)(#{s.word})(\s|\b)/).present?
+        puts 'in'
         str = str.gsub(/#{s.word}/,s.synonyms[0])
         changes.push({:word => s.word, :synonyms=>s.synonyms[0]})
       end
     end
-    str = str.strip
+
     puts str
+    puts changes
     if !Blacklist.is_blacklisted(str)
       is_valid = Phrase.check_if_valid(str)
       puts is_valid

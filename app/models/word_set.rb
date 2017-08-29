@@ -4,7 +4,7 @@ class WordSet < ActiveRecord::Base
 
   def add_main_word
     words = self.words
-    words << self.keyword
+    words << (self.keyword+'*')
     self.update_attribute(:words,words)
   end
 end
