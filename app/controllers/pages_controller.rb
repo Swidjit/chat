@@ -4,4 +4,8 @@ class PagesController < ApplicationController
 
   end
 
+  def chat_lite
+    render 'open-chat-lite'
+  end
+
 end

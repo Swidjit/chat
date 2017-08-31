@@ -1,0 +1,158 @@
+:css
+  .suggestion {
+    display: inline-block;
+    margin-right: 7px;
+    background-color: #eee;
+  }
+  #autosuggestions {
+    height: 25px;
+  }
+
+%div{:style=>"width:45%; display:inline-block;"}
+  #autosuggestions
+  %input#chat{:type=>'text', :placeholder => 'do your worst'}
+  %br
+  #message
+  %button#send{:onclick => "send()"} send
+  %button#report{:onclick => "report()"} this seems ok, but I can't submit it
+
+%div{:style=>"width:45%; display:inline-block;"}
+  %h3 Successful Transmissions
+  #logs
+    =render Log.where(:mode=>'sent').all
+
+
+
+:javascript
+
+  function send() {
+    $.post('/check-validity', {q:$('#chat').val().toLowerCase(), mode:'send'}, function(data) {
+      console.log(data);
+      if(data["success"] == true) {
+        $('#logs').append('<div class="log">' + $('#chat').val().toLowerCase(), + '</log>');
+        $('#chat').val('');
+        $('#send').hide();
+        $('#report').hide();
+      }
+      else {
+        $('#chat').css('color','red');
+        $('#send').hide();
+        $('#report').show();
+        $('#chat').focus();
+      }
+    });
+  }
+
+  function report() {
+    $.post('/log', {input:$('#chat').val().toLowerCase(), mode:'report'}, function(data) {
+      $('#message').html('thanks for reporting');
+      $('#report').hide();
+    });
+  }
+
+
+:javascript
+  $('#chat').focus();
+  var phrase = '';
+  var entries = [];
+
+  jQuery(function(){
+      jQuery('input#chat')
+        .data('timeout', null)
+        .keyup(function(e){
+          var charCode = (e.which) ? e.which : e.keyCode;
+          if (!(charCode >= 48 && charCode <= 57) && !(charCode >= 96 && charCode <= 105) && !(e.keyCode === 0 || e.keyCode === 32)) {
+            clearTimeout(jQuery(this).data('timeout'));
+            jQuery(this).data('timeout', setTimeout(function(){
+
+              q = $("input#chat").val().replace(phrase,'').trim();
+              if(q.length > 1) {
+               $.post('/chat', { q: q}, function(data) {
+                  Jaml.register('choice', function(choice, val) {
+                    div({cls: "suggestion"},
+                      span(choice.str)
+                    );
+                  });
+                  if(data.length > 0){
+                     $("#autosuggestions").html("");
+                     count = 0;
+                     $(data).each(function(idx, d){
+
+                        $("#autosuggestions").append(Jaml.render('choice',d));
+                        count++;
+                     });
+                     $('#autosuggestions').css('display','block');
+                   }else{
+                     $("#autosuggestions").html("<p>No suggestions found.</p>")
+                   }
+
+               }, "json");
+             }
+             else {
+               $('#autosuggestions').css('display','none');
+             }
+            //timeout function
+
+            }, 500));
+          }
+        });
+    });
+
+    $(document).on('click','.choice',function() {
+      console.log('hey');
+        text = $(this).text();
+        $('#chat').val(phrase.trim() + ' ' + text.trim() + ' ');
+        phrase = $('#chat').val().trim();
+        $('#send').show();
+        $('#chat').css('color','green');
+        $('#autosuggestions').empty();
+        $('#send').show();
+        $('#chat').focus();
+    });
+
+  $(window).keydown(function (e) {
+    var charCode = (e.which) ? e.which : e.keyCode;
+    if ((charCode >= 48 && charCode <= 57) || (charCode >= 96 && charCode <= 105)) {
+        text = $('#autosuggestions .choice').eq(e.key).text();
+        e.preventDefault();
+        $('#chat').val(phrase.trim() + ' ' + text.trim() + ' ');
+        phrase = $('#chat').val().trim();
+        $('#send').show();
+        $('#chat').css('color','green');
+        $('#autosuggestions').empty();
+        $('#send').show();
+        $('#chat').focus();
+    }
+    if (e.keyCode === 13) {
+      send();
+    }
+    if (e.keyCode === 0 || e.keyCode === 32 || e.keyCode === 8) {
+      checkIfValid();
+    }
+  });
+
+  function checkIfValid() {
+    $.post('/check-validity2', {q:$('#chat').val().toLowerCase()}, function(data) {
+      console.log(data);
+      if(data["success"] == true) {
+
+        phrase = $('#chat').val().trim();
+        $('#send').show();
+        $('#chat').css('color','green');
+        $("#autosuggestions").html("");
+        $('#report').hide();
+      }
+      else {
+        subs = jQuery.makeArray(data["changes"]);
+        $.each(subs, function(k,change) {
+          console.log(change);
+          //$('#chat').val($('#chat').val().replace(change["word"],change["synonyms"]));
+
+        });
+        $('#chat').css('color','red');
+        $('#send').hide();
+        $('#report').show();
+      }
+    });
+
+  }

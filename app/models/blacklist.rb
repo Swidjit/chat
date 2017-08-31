@@ -50,7 +50,7 @@ class Blacklist < ActiveRecord::Base
     #add capturing group around entire expression
     regexp = regexp.gsub(/\r\n?|\n/,'')
 
-    regexp = '(' + regexp + ')'
+    regexp = '(\b' + regexp + '\b)'
 
     self.update_attribute(:regexp, regexp)
     puts regexp

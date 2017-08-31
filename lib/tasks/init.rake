@@ -12,20 +12,21 @@ namespace :init do
     WordSet.create(:keyword=>'kill', :words => ['rid','end*','terminat*','extinguish*','wast*','zap*','finish*','off*'])
     WordSet.create(:keyword=>'die', :words => ['depart','breathless','offed','breath*'])
     WordSet.create(:keyword=>'fail', :words => ['flop'])
-    WordSet.create(:keyword=>'size', :words => ['small*','big*','siz*','large'])
+    WordSet.create(:keyword=>'size', :words => ['small*','big*','siz*','large*','long'])
     WordSet.create(:keyword=>'command', :words => ['tell*','told','say*','saying','order'])
+    WordSet.create(:keyword=>'nice', :words => ['friend*','kind'])
 
 
     WordSet.create(:keyword=>'stupid', :words => ['dense','slow','dull','thick','basic'])
     WordSet.create(:keyword=>'lame', :words => ['bad','slow','dull','thick'])
     WordSet.create(:keyword=>'smart', :words => ['quick','sharp','intelligent','bright'])
     WordSet.create(:keyword=>'wanted', :words => ['cool','seen','appreciated','liked','loved'])
-    WordSet.create(:keyword=>'touch', :words => ['put*','press*','hold*','push*','tap*','pat*','feel*','felt','brush*','handl*','pok*'])
+    WordSet.create(:keyword=>'touch', :words => ['press*','hold*','push*','tap*','pat*','feel*','felt','brush*','handl*','pok*'])
     WordSet.create(:keyword=>'push', :words => ['shov*','press*','driv*','knock*','forc*'])
     WordSet.create(:keyword=>'insert', :words => ['put*','plac*','push*','slid*','load*','fit*','pop*','stick*','stuck','install*'])
     WordSet.create(:keyword=>'screw', :words => ['sit','sat','sleep*','slept','lay','laid','bed','couple','nail','take','took','tear*','tore','torn'])
     WordSet.create(:keyword=>'grab', :words => ['pull*','clasp*','hold*','tak*','hook*','catch*','seiz*','grip*'])
-    WordSet.create(:keyword=>'own', :words => ['control*','possess*','hav*','rul*'])
+    WordSet.create(:keyword=>'own', :words => ['control*','possess*','rul*'])
     WordSet.create(:keyword=>'desire', :words => ['want*','need*','wish*','hop*','lik*','prefer*','enjoy*'])
     WordSet.create(:keyword=>'pull', :words => ['drag*','rip*','strecth*'])
     WordSet.create(:keyword=>'break', :words => ['split*','tear*','tore','torn'])
@@ -37,19 +38,24 @@ namespace :init do
     Substitution.create(:word=>'hard',:synonyms=>['difficult'])
     Substitution.create(:word=>'easy',:synonyms=>['simple'])
     Substitution.create(:word=>'grass',:synonyms=>['lawn'])
-    Substitution.create(:word=>'thing',:synonyms=>['object'])
     Substitution.create(:word=>'sorry',:synonyms=>['oops'])
     Substitution.create(:word=>'bottom',:synonyms=>['floor'])
-    Substitution.create(:word=>'did you',:synonyms=>['were you'])
-    Substitution.create(:word=>'do you',:synonyms=>['does anyone'])
+    #Substitution.create(:word=>'did you',:synonyms=>['were you'])
+    #Substitution.create(:word=>'do you',:synonyms=>['does anyone'])
+
 
     #Substitution.create(:word=>'stuck',:synonyms=>['trapped'])
 
   end
 
-  task :import => :environment do
+  task :import, [:data_set]  => :environment  do |t, args|
+    if args.data_set == 'lightweight'
+      files = ['lightweight.csv','abbreviations.csv']
+    else
+      files = ['nouns.csv','core.csv','adjectives.csv','verbs.csv','abbreviations.csv']
+    end
     Phrase.delete_all
-    files = ['nouns.csv','core.csv','adjectives.csv','verbs.csv','abbreviations.csv']
+
     files.each do |f|
       file = File.open(f)
       file.each do |line|

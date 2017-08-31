@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   post '/chat' => 'phrases#autocomplete'
   post '/check-validity' => 'phrases#check_validity'
+  post '/check-validity2' => 'phrases#check_validity2'
 
   post '/interpret' => 'intents#interpret'
   post '/recommend' => 'intents#recommend'
@@ -12,4 +13,5 @@ Rails.application.routes.draw do
   post '/log' => 'logs#create'
 
   get 'chat' => 'pages#chat'
+  get 'open-chat-lite' => 'pages#chat_lite'
 end

@@ -1,9 +1,10 @@
 [ejaculate] {2} on/in/over ([you]|[your])
 ([desire]|will|going) ^ ([touch]|[injure]|[kill])
 [insert] {3} ([your]|it) {4} ([your]|[you])
-(did|do|doing|done) {2} ([you]|[your]|other|another)
+[i] {2} (did|do|doing|done) {2} ([you]|[your]|other|another)
 ([insert]|[injure]|[kill]) ([your]|[you])
 (did|do|doing|done) it {3} ([you][your])
+put* [your] hand* {2} [you]
 ([touch]|[grab]) {4} ([you]|[your])
 (((fool|mess) around)|((go|went*) all the {1} way)|((sleep*|slept) ^ (with|together|around)))
 ((mak*/made out)|((get*/got) together)|(hook* up))
@@ -18,12 +19,12 @@ pick* ([you]|[your]) up
 [desire] piece of ([you]|[your]|this/that)
 ([i]|[your]) are/is/was {2} hot/pretty
 (stop being)|(do not be)
-([i]|[your]) {2} is/are {2} ([size]|[stupid])]
+([i]|[yours]) {2} [size] {2} ([you]|[yours])
+([i]|[your]) {2} is/are {2} ([size]|[stupid])
 ([i]|[your]) {2} is/are {2} really/so/such/always/too {1} ([size]|[stupid])
 ([i]|[your]) {2} is/are {2} a
-([i]|[your]) {2} is/are {2} no* {2} ([wanted]|[smart])
+([i]|[your]|that) {2} is/are {2} not {2} ([wanted]|[smart]|[nice])
 com* (for|to [grab]|get) ([you]|[your])
-([i]|[your]) {2} is/are no* ([wanted]|[smart])
 done for/in
 ([i]|[your]) {2} going/will/should {2} ([injure]|[die]|[fail])
 [i] ^ no more
@@ -86,7 +87,7 @@ sleep*/lay {3} ([you]|[your])
 spin* the {1} bottle
 ([you]|[your]) face
 ([push]|[ejaculate]|[injure]|[kill]) {2} face
-hav*/had [you]
+[i] hav*/had [you]
 ([you]|[your]) thing/stuff/goods
 ([your]|[i]) ^ turn* [you] ^ on/in/over/around
 [i] ^ [break] {2} ([you]|[your])
@@ -129,6 +130,7 @@ concentration camp*
 face off
 face (it|(the fact*))
 ((close to)|almost|near*) {2} com*
+hand* job*
 kill
 screw
 slam
